@@ -3,7 +3,7 @@ from IPython.display import display
 import time
 from pathlib import Path
 from py4syn.epics.MotorClass import Motor
-
+import py4syn
 
 # Logging function that write log information in a file and also in the notebook output cells (if this config is set True)
 def logprint(string, mode="[INFO]", config={'log_cell': widgets.Checkbox(value=False)}):

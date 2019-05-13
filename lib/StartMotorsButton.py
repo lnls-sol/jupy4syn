@@ -1,6 +1,7 @@
 import ipywidgets as widgets
 from IPython.display import display
 import time
+from py4syn.epics.MotorClass import Motor
 from .utils import logprint, configurate_motor
 from .MotorSetValueButton import MotorSetValueButton
 
