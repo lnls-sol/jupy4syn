@@ -4,13 +4,16 @@ import time
 from .utils import logprint
 import os
 
+
 class ExportButtonHTML(widgets.Button):
-    def __init__(self, config, notebook_name, plots_list, *args, **kwargs):
+    def __init__(self, config, *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config
         self.config = config
-        self.notebook_name = notebook_name
+        self.notebook_name = config.notebook_name.value
+        self.plots_list = config.plots_list
+
         self.description='Export Notebook to HTML'
         self.disabled=False
         self.button_style='warning' # 'success', 'info', 'warning', 'danger' or ''
@@ -19,8 +22,6 @@ class ExportButtonHTML(widgets.Button):
         self.layout = widgets.Layout(width='300px')
     
         self.on_click(self._export_button)
-        
-        self.plots_list = plots_list
 
         self.output = widgets.Output()
     
@@ -35,7 +36,14 @@ class ExportButtonHTML(widgets.Button):
             # We should sleep for some time to give some responsiveness to the user
             time.sleep(0.5)
 
+            # Check if notebook name is not empty
+            if b.notebook_name == "":
+                logprint("Notebook name not defined in configuration cell", "[ERROR]", config=b.config)
+
             try:
+                for plot in b.plots_list:
+                    plot[0].export = True
+
                 from IPython.display import Javascript
                 
                 ts = time.gmtime()
@@ -48,6 +56,7 @@ class ExportButtonHTML(widgets.Button):
                 
                 for plot in b.plots_list:
                     plot[0].export = False
+
             except Exception as e:
                 logprint(str(e), "[ERROR]", config=b.config)
             

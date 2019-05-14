@@ -6,12 +6,14 @@ import os
 
 
 class ExportButtonPDF(widgets.Button):
-    def __init__(self, config, notebook_name, plots_list, *args, **kwargs):
+    def __init__(self, config, *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config
         self.config = config
-        self.notebook_name = notebook_name
+        self.notebook_name = config.notebook_name.value
+        self.plots_list = config.plots_list
+
         self.description='Export Notebook to PDF'
         self.disabled=False
         self.button_style='warning' # 'success', 'info', 'warning', 'danger' or ''
@@ -20,8 +22,6 @@ class ExportButtonPDF(widgets.Button):
         self.layout = widgets.Layout(width='300px')
     
         self.on_click(self._export_button)
-        
-        self.plots_list = plots_list
 
         self.output = widgets.Output()
     
@@ -35,22 +35,28 @@ class ExportButtonPDF(widgets.Button):
 
             # We should sleep for some time to give some responsiveness to the user
             time.sleep(0.5)
+
+            # Check if notebook name is not empty
+            if b.notebook_name == "":
+                logprint("Notebook name not defined in configuration cell", "[ERROR]", config=b.config)
             
             try:
+                for plot in b.plots_list:
+                    plot[0].export = True
+                
                 from IPython.display import Javascript
         
                 ts = time.gmtime()
                 time_stamp = time.strftime("%Y-%m-%d-%H:%M:%S", ts)
-                output_file = time_stamp + "-main_notebook"
+                output_file = time_stamp + '-' + b.notebook_name
 
                 display(Javascript('IPython.notebook.save_checkpoint();'))
-                
-                time.sleep(3)
                 
                 os.system("python3 -m nbconvert main_notebook.ipynb --output-dir=./exports --output=" + output_file + " --to pdf")
                 
                 for plot in b.plots_list:
                     plot[0].export = False
+
             except Exception as e:
                 logprint(str(e), "[ERROR]", config=b.config)
             
