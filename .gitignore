@@ -1,0 +1,8 @@
+*.png
+*.txt
+plot*
+test*
+*.html
+*.pdf
+*.pyc
+.vscode/*
