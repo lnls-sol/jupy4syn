@@ -4,9 +4,11 @@ import time
 from pathlib import Path
 from py4syn.epics.MotorClass import Motor
 import py4syn
+from .Configuration import Configuration
+
 
 # Logging function that write log information in a file and also in the notebook output cells (if this config is set True)
-def logprint(string, mode="[INFO]", config={'log_cell': widgets.Checkbox(value=False)}):
+def logprint(string, mode="[INFO]", config=Configuration()):
     # Log information has a time stamp using GMT-0 time to avoid local computer time problems
     ts = time.gmtime()
     
@@ -24,12 +26,12 @@ def logprint(string, mode="[INFO]", config={'log_cell': widgets.Checkbox(value=F
         f.write(time_stamp + ' | ' + mode + ' ' + string + '\n')
     
     # Write log in stdout
-    if config['log_cell'].value:
+    if config.config['log_cell'].value:
         print(time_stamp, string)
 
 
 # Util function to create a motor with logging informations
-def configurate_motor(motor_pv_name='', motor_name='', config={'log_cell': widgets.Checkbox(value=False)}):
+def configurate_motor(motor_pv_name='', motor_name='', config=Configuration()):
     motor = None
     
     try:

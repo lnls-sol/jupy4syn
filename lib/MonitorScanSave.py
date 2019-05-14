@@ -17,11 +17,12 @@ from plotly import tools
 
 class MonitorScanSave(widgets.Button):
     
-    def __init__(self, config, plots_list, *args, **kwargs):
+    def __init__(self, config, *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config
-        self.config = config
+        self.config = config     
+        self.plots_list = config.plots_list
         
         # class Button values for MonitorScanSave
         self.description='Start Scanning Plot'
@@ -61,23 +62,35 @@ class MonitorScanSave(widgets.Button):
             value=False,
             description="Live plot in Jupyter: ",
             disabled=False,
-            style={'description_width': 'initial'},
+            style={'description_width': 'initial'}
         )
         
-        self.checkbox_final_plot = widgets.Checkbox(
+        self.checkbox_final_plot_jupy = widgets.Checkbox(
             value=False,
-            description="Plot scan-gui graph instead of Jupyter's: ",
+            description="Plot with Plotly after scan ends: ",
             disabled=False,
-            style={'description_width': 'initial'},
+            style={'description_width': 'initial'}
+        )
+
+        self.checkbox_final_plot_pyqt = widgets.Checkbox(
+            value=True,
+            description="Plot with PyQtGraph after scan ends: ",
+            disabled=False,
+            style={'description_width': 'initial'}
         )
         
-        
+        self.select_plot_option = widgets.Dropdown(
+            options=['Plot after ends with PyQt', 'Plot after ends with Plotly', 'Live Plot'],
+            value='Plot after ends with PyQt',
+            # rows=10,
+            description='',
+            disabled=False,
+            style={'description_width': 'initial'}
+        )
         
         self.fig = go.FigureWidget()
         self.fig_box = widgets.Box()
         self.refresh_icon_box = widgets.Box(layout=widgets.Layout(width='40px', height='40px'))
-        
-        self.plots_list = plots_list
         
         self.export = False
         self.clear_threads = False
@@ -92,7 +105,8 @@ class MonitorScanSave(widgets.Button):
             if b.monitor:
                 # Enable checkboxes
                 b.checkbox_live_plot.disabled = False
-                b.checkbox_final_plot.disabled = False
+                b.checkbox_final_plot_jupy.disabled = False
+                b.select_plot_option.disabled = False
                 
                 # Change button monitor status
                 b.monitor = not b.monitor
@@ -125,9 +139,10 @@ class MonitorScanSave(widgets.Button):
             else:
                 # Disable checkboxes
                 b.checkbox_live_plot.disabled = True
-                b.checkbox_final_plot.disabled = True
+                b.checkbox_final_plot_jupy.disabled = True
+                b.select_plot_option.disabled = True
                 
-                p = subprocess.Popen(["pydm --hide-nav-bar --hide-menu-bar /home/gabriel.andrade/work/scan-gui/scan_gui.py"],
+                subprocess.Popen(["pydm --hide-nav-bar --hide-menu-bar /home/gabriel.andrade/work/scan-gui/scan_gui.py"],
                                      shell=True)
                 
                 # Change button monitor status
@@ -178,9 +193,6 @@ class MonitorScanSave(widgets.Button):
                     
                     os.remove(str(self.scan_path))
                     
-                    save_file_str = json.dumps(save_file)
-                    save_file_pretty_str = json.dumps(save_file, indent=4)
-                    
                     command = save_file["command"]["value"]
                     parser = self.scan_parser()
                     
@@ -198,14 +210,16 @@ class MonitorScanSave(widgets.Button):
                               "Scan with command: '" + command + "'\n" + \
                               "Scan configuration: '" + config_name + "'\n" + \
                               "Scan data saved in: '" + self.scan_name + "'\n" + \
-                              "Scan plot saved in: '" + self.plot_name + "'\n"
+                              "Jupyter Scan plot saved in: '" + self.plot_name + "'\n" + \
+                              "PyQtGraph Scan plot saved in: '" + self.plot_name + "'\n"
                     
-                    log_file_name = Path('./' + year_month_day + '-scanlog.txt')
+                    log_file_name = Path('./scanlogs/' + year_month_day + '-scanlog.txt')
                     with open(str(log_file_name), "a") as f:
                         f.write(self.log_str + '\n')
                     IPython.display.update_display(IPython.display.Pretty(self.log_str), display_id='text')
                                     
-                    self.plots_list.append([self, self.plot_name])
+                    if self not in self.plots_list:
+                        self.plots_list.append(self)
 
                     # Call live graph
                     self.list_motors = save_file["listMotors"]["value"]
@@ -262,7 +276,7 @@ class MonitorScanSave(widgets.Button):
     def update_pd(self, default_name, label):
         try:
             df = pd.read_csv(default_name, sep=' ', comment='#', header=None)
-        except Exception as e:
+        except:
             return pd.DataFrame(), label
 
         filtered_label = label
@@ -293,11 +307,14 @@ class MonitorScanSave(widgets.Button):
             df, label = self.update_pd(self.scan_name, label)
         
         number_motors = len(self.list_motors)
-        self.create_figure(len(df.columns) - number_motors)
+
+        if self.select_plot_option.value == "Plot after ends with Plotly" or self.select_plot_option.value == "Live Plot":
+            self.create_figure(len(df.columns) - number_motors)
+            self.clear_image_file()
         
         while df.shape[0] < self.number_reads:
             df, label = self.update_pd(self.scan_name, label)
-            if self.checkbox_live_plot.value:           
+            if self.select_plot_option.value == "Live Plot":           
                 if df.empty:
                     continue
 
@@ -312,18 +329,17 @@ class MonitorScanSave(widgets.Button):
         self.clear_threads = True
         
         # update last scan value
-        for i in range(len(df.columns) - number_motors): 
-                self.fig['data'][i]['x'] = df.index.values
-                self.fig['data'][i]['y'] = df[df.columns[number_motors + i]].values
+        if self.select_plot_option.value == "Plot after ends with Plotly" or self.select_plot_option.value == "Live Plot":
+            for i in range(len(df.columns) - number_motors): 
+                    self.fig['data'][i]['x'] = df.index.values
+                    self.fig['data'][i]['y'] = df[df.columns[number_motors + i]].values
                 
-        # save image as png
-        pio.write_image(self.fig, self.plot_name)
+            # save image as png
+            pio.write_image(self.fig, self.plot_name)
         
         # Plot scan-gui pyqt graph
-        if self.checkbox_final_plot.value:
+        if self.select_plot_option.value == 'Plot after ends with PyQt':
             self.load_image_file(self.scan_name + ".png")
-            
-#         self._start_button(self)
             
     def create_figure(self, number_traces):
         self.traces = []
@@ -390,13 +406,16 @@ class MonitorScanSave(widgets.Button):
         while True:
             if self.export:
                 if updating:
-                    img = IPython.display.Image(data=self.plot_name)
-                    IPython.display.update_display(img, display_id='img')
-                    updating = False
+                    if self.select_plot_option.value != 'Plot after ends with PyQt':
+                        img = IPython.display.Image(filename=self.scan_name + ".png")
+                        IPython.display.update_display(img, display_id='img')
                     
+                    updating = False
             else:
                 if not updating:
-                    IPython.display.update_display("", display_id='img')
+                    if self.select_plot_option.value != 'Plot after ends with PyQt':
+                        IPython.display.update_display("", display_id='img')
+                    
                     updating = True
                 
             time.sleep(0.5)
@@ -404,12 +423,18 @@ class MonitorScanSave(widgets.Button):
     def load_image_file(self, filename):
         self.fig_box.children = []
         
-        img = IPython.display.Image(data=filename)
+        img = IPython.display.Image(filename=filename)
         IPython.display.update_display(img, display_id='img')
+
+    def clear_image_file(self):
+        IPython.display.update_display("", display_id='img')
     
     def display_start_button(self):
-        display(self.checkbox_live_plot, self.checkbox_final_plot, self.start_button, self.refresh_icon_box, self.fig_box, self.output)
-        IPython.display.display((""), display_id='text')
+        display(self.select_plot_option,
+                self.start_button, self.refresh_icon_box, self.fig_box, self.output)
+        
         IPython.display.display((""), display_id='img')
+        IPython.display.display((""), display_id='text')
+        
         self.export_thread = threading.Thread(target=self.export_image_thread)
         self.export_thread.start()

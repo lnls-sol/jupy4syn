@@ -48,7 +48,7 @@ class ManualAlignmentButton(widgets.Button):
             # Stop thread to monitor the save file
             try:
                 logprint("Starting manual alignment", config=b.config)
-                subprocess.run(["pydm /home/gabriel.andrade/work/sol-widgets/examples/motor/slits.ui"],
+                subprocess.run(["pydm /usr/local/SOL/GUI/sol-widgets/examples/motor/slits.ui"],
                                  shell=True, check=True)
 
                 logprint("Finished manual alignment", config=b.config)
