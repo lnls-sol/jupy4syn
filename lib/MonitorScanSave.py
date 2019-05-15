@@ -45,11 +45,10 @@ class MonitorScanSave(widgets.Button):
         
         # Threading
         self.monitor = False
-        self.thread = None
-        self.refresh_thread = None
+        self.thread = threading.Thread()
+        self.refresh_thread = threading.Thread()
         self.interrupted_scan = False
-        self.fig_thread = None
-        self.refresh_thread = None
+        self.fig_thread = threading.Thread()
         
         # Set callback function for click event
         self.on_click(self._start_button)
@@ -148,7 +147,7 @@ class MonitorScanSave(widgets.Button):
                 b.checkbox_final_plot_jupy.disabled = True
                 b.select_plot_option.disabled = True
                 
-                subprocess.Popen(["scan_gui"],
+                subprocess.Popen(["pydm --hide-nav-bar --hide-menu-bar ~/work/scan-gui/scan_gui.py"],
                                      shell=True)
                 
                 # Change button monitor status
