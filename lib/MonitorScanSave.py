@@ -35,8 +35,10 @@ class MonitorScanSave(widgets.Button):
         # Scan save file and directory
         self.scan_save_dir = '/tmp/'
         self.scan_save_file = 'scan_gui.temp'
+        self.stop_file = 'stop'
 
         self.scan_path = Path(self.scan_save_dir + self.scan_save_file)
+        self.stop_path = Path(self.scan_save_dir + self.stop_file)
         
         # Logging
         self.output = widgets.Output()
@@ -44,6 +46,9 @@ class MonitorScanSave(widgets.Button):
         # Threading
         self.monitor = False
         self.thread = None
+        self.refresh_thread = None
+        self.interrupted_scan = False
+        self.fig_thread = None
         self.refresh_thread = None
         
         # Set callback function for click event
@@ -55,6 +60,7 @@ class MonitorScanSave(widgets.Button):
         # Clean previous temp config file
         try:
             os.remove(str(self.scan_path))
+            os.remove(str(self.stop_path))
         except:
             pass
         
@@ -159,6 +165,7 @@ class MonitorScanSave(widgets.Button):
                 # Clean previous scans config
                 try:
                     os.remove(str(b.scan_path))
+                    os.remove(str(b.stop_path))
                 except:
                     pass
 
@@ -192,26 +199,32 @@ class MonitorScanSave(widgets.Button):
                              pass
                     
                     os.remove(str(self.scan_path))
+                    os.remove(str(self.stop_path))
                     
                     command = save_file["command"]["value"]
                     parser = self.scan_parser()
                     
-                    self.synchronous = save_file["checkSync"]["value"]                    
-                    self.scan_name = self.get_scan_name(command, parser)
+                    self.synchronous = save_file["checkSync"]["value"]  
+                    self.number_repeats = save_file["spinRepeat"]["value"]
+
+                    # Waits for file creation by scan-gui
+                    time.sleep(1.0)
+
+                    self.scan_names = self.get_scan_name(command, parser, self.number_repeats)
                     config_name = self.get_config_name(command, parser)
                     
-                    self.plot_name = self.scan_name + "-jupy.png"
+                    self.plot_name = self.scan_names[-1] + "-jupy.png"
                     
                     ts = time.gmtime()
     
                     year_month_day = time.strftime("%Y-%m-%d", ts)
                     time_stamp = time.strftime("%Y-%m-%d %H:%M:%S", ts) + " UTC-0"
                     self.log_str = time_stamp + "| [SCAN]:\n" + \
-                              "Scan with command: '" + command + "'\n" + \
+                              "Scan with command: '" + command + "' repeated " + str(self.number_repeats) + " times\n" + \
                               "Scan configuration: '" + config_name + "'\n" + \
-                              "Scan data saved in: '" + self.scan_name + "'\n" + \
+                              "Scan data saved in: '" + self.scan_names[-1] + "'\n" + \
                               "Jupyter Scan plot saved in: '" + self.plot_name + "'\n" + \
-                              "PyQtGraph Scan plot saved in: '" + self.plot_name + "'\n"
+                              "PyQtGraph Scan plot saved in: '" + self.scan_names[-1] + ".png" + "'\n"
                     
                     log_file_name = Path('./scanlogs/' + year_month_day + '-scanlog.txt')
                     with open(str(log_file_name), "a") as f:
@@ -230,6 +243,12 @@ class MonitorScanSave(widgets.Button):
                     # Scan status icon
                     self.refresh_thread = threading.Thread(target=self.thread_refresh_icon)
                     self.refresh_thread.start()  
+                elif self.stop_path.is_file():
+                    self.started_scan = False
+                    self.interrupted_scan = True
+                    self.clear_threads = True
+
+                    os.remove(str(self.stop_path))
                 else:
                     pass
                 
@@ -241,10 +260,12 @@ class MonitorScanSave(widgets.Button):
                 
                 time.sleep(0.5)
                 
-    def get_scan_name(self, command, parser):
+    def get_scan_name(self, command, parser, number_repeats):
         args = parser.parse_known_args(command.split(' '))
 
         fileName = args[0].output
+
+        scan_names = []
 
         leadingZeros = 4
         newName = ""
@@ -255,11 +276,13 @@ class MonitorScanSave(widgets.Button):
             if(os.path.isfile(newName)):
                 continue
             else:
+                for i in range(number_repeats):
+                    scan_names.append(fileName + "_" + str(cont - 1 + i).zfill(leadingZeros))
 #                 if self.synchronous:
 #                     newName = fileName + "_" + str(cont - 1).zfill(leadingZeros)
                 break
                 
-        return newName
+        return scan_names
     
     def get_config_name(self, command, parser):
         args = parser.parse_known_args(command.split(' '))
@@ -273,16 +296,24 @@ class MonitorScanSave(widgets.Button):
         
         return parser.parser
     
-    def update_pd(self, default_name, label):
-        try:
-            df = pd.read_csv(default_name, sep=' ', comment='#', header=None)
-        except:
-            return pd.DataFrame(), label
+    def update_pd(self, default_names, label):
+        dfs = []
+        number_non_empty = len(default_names)
+
+        for default_name in default_names:
+            try:
+                dfs.append(pd.read_csv(default_name, sep=' ', comment='#', header=None))
+            except:
+                dfs.append(pd.DataFrame())
+                number_non_empty -= 1
+
+        if number_non_empty == 0:
+            return dfs, label
 
         filtered_label = label
         if not label:
             labels = []
-            with open(default_name) as file:
+            with open(default_names[0]) as file:
                 for i, line in enumerate(file):
                     if i == 6:
                         self.number_reads = (int(line.split(' ')[1]))
@@ -297,30 +328,35 @@ class MonitorScanSave(widgets.Button):
 
             label = filtered_label
 
-        df.columns = pd.Index(filtered_label, dtype='object')
-        return df, label
+        for df in dfs:
+            if not df.empty:
+                df.columns = pd.Index(filtered_label, dtype='object')
+        
+        return dfs, label
 
     def thread_plot(self):
-        df = pd.DataFrame()
-        while df.empty:
+        dfs = []
+        dfs.append(pd.DataFrame())
+        while dfs[0].empty:
             label = []
-            df, label = self.update_pd(self.scan_name, label)
+            dfs, label = self.update_pd(self.scan_names, label)
         
         number_motors = len(self.list_motors)
 
         if self.select_plot_option.value == "Plot after ends with Plotly" or self.select_plot_option.value == "Live Plot":
-            self.create_figure(len(df.columns) - number_motors)
+            self.create_figure(len(dfs[0].columns) - number_motors)
             self.clear_image_file()
         
-        while df.shape[0] < self.number_reads:
-            df, label = self.update_pd(self.scan_name, label)
-            if self.select_plot_option.value == "Live Plot":           
-                if df.empty:
-                    continue
+        while dfs[-1].shape[0] < self.number_reads:
+            dfs, label = self.update_pd(self.scan_names, label)
+            if self.select_plot_option.value == "Live Plot":
+                for i in range(len(dfs)):
+                    if dfs[i].empty:
+                        continue
 
-                for i in range(len(df.columns) - number_motors): 
-                    self.fig['data'][i]['x'] = df.index.values
-                    self.fig['data'][i]['y'] = df[df.columns[number_motors + i]].values               
+                    for j in range(len(dfs[i].columns) - number_motors): 
+                        self.fig['data'][i + j*len(dfs)]['x'] = dfs[i].index.values
+                        self.fig['data'][i + j*len(dfs)]['y'] = dfs[i][dfs[i].columns[number_motors + j]].values               
 
             time.sleep(1)
         
@@ -330,16 +366,20 @@ class MonitorScanSave(widgets.Button):
         
         # update last scan value
         if self.select_plot_option.value == "Plot after ends with Plotly" or self.select_plot_option.value == "Live Plot":
-            for i in range(len(df.columns) - number_motors): 
-                    self.fig['data'][i]['x'] = df.index.values
-                    self.fig['data'][i]['y'] = df[df.columns[number_motors + i]].values
+            for i in range(len(dfs)):
+                    if dfs[i].empty:
+                        continue
+
+                    for j in range(len(dfs[i].columns) - number_motors): 
+                        self.fig['data'][i + j*len(dfs)]['x'] = dfs[i].index.values
+                        self.fig['data'][i + j*len(dfs)]['y'] = dfs[i][dfs[i].columns[number_motors + j]].values                           
                 
             # save image as png
             pio.write_image(self.fig, self.plot_name)
         
         # Plot scan-gui pyqt graph
         if self.select_plot_option.value == 'Plot after ends with PyQt':
-            self.load_image_file(self.scan_name + ".png")
+            self.load_image_file(self.scan_names[-1] + ".png")
             
     def create_figure(self, number_traces):
         self.traces = []
@@ -347,13 +387,16 @@ class MonitorScanSave(widgets.Button):
         self.fig = go.FigureWidget(tools.make_subplots(rows=number_traces, cols=1))
         
         for i in range(number_traces):
-            trace = go.Scatter(
-                x=[], y=[], # Data
-                mode='lines+markers', name='line' + str(i+1)
-            )
+            self.traces.append([])
 
-            self.traces.append(trace)
-            self.fig.append_trace(trace, i + 1, 1) # using i + 1 because plot index starts at 1
+            for _ in range(len(self.scan_names)):
+                trace = go.Scatter(
+                    x=[], y=[], # Data
+                    mode='lines+markers', name='line' + str(i+1)
+                )
+
+                self.traces[i].append(trace)
+                self.fig.append_trace(trace, i + 1, 1) # using i + 1 because plot index starts at 1
 
         self.fig['layout'].update(title='Scan', plot_bgcolor='rgb(230, 230, 230)')
         self.fig_box.children = (self.fig,)
@@ -388,6 +431,11 @@ class MonitorScanSave(widgets.Button):
         file = open(".img/tick.png", "rb")
         image = file.read()
         img_w .value = image
+
+        if self.interrupted_scan:
+            file = open(".img/close.png", "rb")
+            image = file.read()
+            img_w .value = image
         
     def clean_refresh_icon(self):
         file = open(".img/blank.png", "rb")
@@ -407,7 +455,7 @@ class MonitorScanSave(widgets.Button):
             if self.export:
                 if updating:
                     if self.select_plot_option.value != 'Plot after ends with PyQt':
-                        img = IPython.display.Image(filename=self.scan_name + ".png")
+                        img = IPython.display.Image(filename=self.scan_names[-1] + ".png")
                         IPython.display.update_display(img, display_id='img')
                     
                     updating = False
