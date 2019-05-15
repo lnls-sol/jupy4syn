@@ -148,7 +148,7 @@ class MonitorScanSave(widgets.Button):
                 b.checkbox_final_plot_jupy.disabled = True
                 b.select_plot_option.disabled = True
                 
-                subprocess.Popen(["pydm --hide-nav-bar --hide-menu-bar /home/gabriel.andrade/work/scan-gui/scan_gui.py"],
+                subprocess.Popen(["scan_gui"],
                                      shell=True)
                 
                 # Change button monitor status
@@ -199,7 +199,11 @@ class MonitorScanSave(widgets.Button):
                              pass
                     
                     os.remove(str(self.scan_path))
-                    os.remove(str(self.stop_path))
+                    
+                    try:
+                        os.remove(str(self.stop_path))
+                    except:
+                        pass
                     
                     command = save_file["command"]["value"]
                     parser = self.scan_parser()
@@ -253,8 +257,11 @@ class MonitorScanSave(widgets.Button):
                     pass
                 
                 if self.clear_threads:
-                    self.fig_thread.join()
-                    self.refresh_thread.join()
+                    try:
+                        self.fig_thread.join()
+                        self.refresh_thread.join()
+                    except:
+                        pass
                     
                     self.clear_threads = False
                 

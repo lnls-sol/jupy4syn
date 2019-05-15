@@ -36,13 +36,17 @@ class ExportButtonHTML(widgets.Button):
             # We should sleep for some time to give some responsiveness to the user
             time.sleep(0.5)
 
+            # Get actual values
+            b.notebook_name = b.config.notebook_name.value
+            b.plots_list = b.config.plots_list
+
             # Check if notebook name is not empty
             if b.notebook_name == "":
                 logprint("Notebook name not defined in configuration cell", "[ERROR]", config=b.config)
 
             try:
                 for plot in b.plots_list:
-                    plot[0].export = True
+                    plot.export = True
 
                 from IPython.display import Javascript
                 
@@ -55,7 +59,7 @@ class ExportButtonHTML(widgets.Button):
                 os.system("python3 -m nbconvert " + b.notebook_name + ".ipynb --output-dir=./exports --output=" + output_file + " --to html")
                 
                 for plot in b.plots_list:
-                    plot[0].export = False
+                    plot.export = False
 
             except Exception as e:
                 logprint(str(e), "[ERROR]", config=b.config)

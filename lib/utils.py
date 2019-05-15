@@ -27,7 +27,7 @@ def logprint(string, mode="[INFO]", config=Configuration()):
     
     # Write log in stdout
     if config.config['log_cell'].value:
-        print(time_stamp, string)
+        print(time_stamp + ' | ' + mode + ' ' + string)
 
 
 # Util function to create a motor with logging informations
