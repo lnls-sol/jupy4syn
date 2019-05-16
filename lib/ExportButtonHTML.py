@@ -43,7 +43,7 @@ class ExportButtonHTML(widgets.Button):
             # Check if notebook name is not empty
             if b.notebook_name == "":
                 logprint("Notebook name not defined in configuration cell", "[ERROR]", config=b.config)
-
+                
             try:
                 for plot in b.plots_list:
                     plot.export = True

@@ -42,6 +42,10 @@ class MonitorScanSave(widgets.Button):
         
         # Logging
         self.output = widgets.Output()
+
+        # Scan-gui process
+        self.scan_gui_process = subprocess.Popen(["echo"])
+
         
         # Threading
         self.monitor = False
@@ -147,7 +151,8 @@ class MonitorScanSave(widgets.Button):
                 b.checkbox_final_plot_jupy.disabled = True
                 b.select_plot_option.disabled = True
                 
-                subprocess.Popen(["pydm --hide-nav-bar --hide-menu-bar ~/work/scan-gui/scan_gui.py"],
+                if b.scan_gui_process.poll() is not None:
+                    b.scan_gui_process = subprocess.Popen(["pydm --hide-nav-bar --hide-menu-bar ~/work/scan-gui/scan_gui.py"],
                                      shell=True)
                 
                 # Change button monitor status
@@ -385,6 +390,9 @@ class MonitorScanSave(widgets.Button):
         
         # Plot scan-gui pyqt graph
         if self.select_plot_option.value == 'Plot after ends with PyQt':
+            # Waits for scan-gui to save the plot
+            time.sleep(5.0)
+
             self.load_image_file(self.scan_names[-1] + ".png")
             
     def create_figure(self, number_traces):

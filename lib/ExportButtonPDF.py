@@ -39,10 +39,6 @@ class ExportButtonPDF(widgets.Button):
             # Get actual values
             b.notebook_name = b.config.notebook_name.value
             b.plots_list = b.config.plots_list
-
-            # Check if notebook name is not empty
-            if b.notebook_name == "":
-                logprint("Notebook name not defined in configuration cell", "[ERROR]", config=b.config)
             
             try:
                 for plot in b.plots_list:
