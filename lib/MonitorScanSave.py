@@ -391,14 +391,14 @@ class MonitorScanSave(widgets.Button):
         # Plot scan-gui pyqt graph
         if self.select_plot_option.value == 'Plot after ends with PyQt':
             # Waits for scan-gui to save the plot
-            time.sleep(5.0)
+            time.sleep(3.0)
 
             self.load_image_file(self.scan_names[-1] + ".png")
             
     def create_figure(self, number_traces):
         self.traces = []
         
-        self.fig = go.FigureWidget(tools.make_subplots(rows=number_traces, cols=1))
+        self.fig = go.FigureWidget(tools.make_subplots(rows=number_traces, cols=1, print_grid=False))
         
         for i in range(number_traces):
             self.traces.append([])
