@@ -56,7 +56,7 @@ class ExportButtonHTML(widgets.Button):
 
                 display(Javascript('IPython.notebook.save_checkpoint();'))
                 
-                os.system("python3 -m nbconvert ./" + b.notebook_name + ".ipynb --output-dir=./exports --output=" + output_file + " --to html")
+                os.system("python3 -m nbconvert ./" + b.notebook_name + ".ipynb --template=nbextensions --output-dir=./exports --output=" + output_file + " --to html")
                 
                 for plot in b.plots_list:
                     plot.export = False

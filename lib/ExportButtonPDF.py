@@ -52,7 +52,7 @@ class ExportButtonPDF(widgets.Button):
 
                 display(Javascript('IPython.notebook.save_checkpoint();'))
                 
-                os.system("python3 -m nbconvert main_notebook.ipynb --output-dir=./exports --output=" + output_file + " --to pdf")
+                os.system("python3 -m nbconvert ./" + b.notebook_name + ".ipynb --template=nbextensions --output-dir=./exports --output=" + output_file + " --to pdf")
                 
                 for plot in b.plots_list:
                     plot.export = False
