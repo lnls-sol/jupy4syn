@@ -5,7 +5,7 @@ from .utils import logprint
 import os
 
 
-class ExportButtonPDF(widgets.Button):
+class ExportButtonLatex(widgets.Button):
     def __init__(self, config, *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
         
@@ -14,7 +14,7 @@ class ExportButtonPDF(widgets.Button):
         self.notebook_name = config.notebook_name.value
         self.plots_list = config.plots_list
 
-        self.description='Export Notebook to PDF'
+        self.description='Export Notebook to Latex'
         self.disabled=False
         self.button_style='warning' # 'success', 'info', 'warning', 'danger' or ''
         self.tooltip='Click me'
@@ -52,7 +52,7 @@ class ExportButtonPDF(widgets.Button):
 
                 display(Javascript('IPython.notebook.save_checkpoint();'))
                 
-                os.system("python3 -m nbconvert ./" + b.notebook_name + ".ipynb --template=nbextensions --output-dir=./exports --output=" + output_file + " --to pdf")
+                os.system("python3 -m nbconvert ./" + b.notebook_name + ".ipynb --template=nbextensions --output-dir=./exports --output=" + output_file + " --to latex")
                 
                 for plot in b.plots_list:
                     plot.export = False
@@ -63,7 +63,7 @@ class ExportButtonPDF(widgets.Button):
             # Reenable button
             b.disabled = False
             b.button_style = 'warning'
-            b.description='Export Notebook to PDF'
+            b.description='Export Notebook to Latex'
         
     def display_export_button(self):
         display(self, self.output)

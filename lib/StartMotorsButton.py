@@ -62,7 +62,18 @@ class StartMotorsButton(widgets.Button):
             time.sleep(0.5)
 
             # Get motors PV names from the text box
-            motor_list_names = b.text.value.split(' ')
+            # Filter names
+            motor_list_names = []
+            names_comma_space_ent = []
+            names_space = b.text.value.split(' ')
+            for name in names_space:
+                names_comma_space = name.split(",")
+
+                for name_wout_comma in names_comma_space:
+                    names_comma_space_ent.append(name_wout_comma.split("\n"))
+
+            lin_names = sum(names_comma_space_ent, [])
+            motor_list_names = [name for name in lin_names if name != "" and name != "\n"]
 
             logprint("Starting motors " + ', '.join(motor_list_names) + " initialization", config=b.config)
 
