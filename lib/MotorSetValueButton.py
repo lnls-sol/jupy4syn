@@ -28,7 +28,7 @@ class MotorSetValueButton(widgets.Button):
                                 min=motor.getLowLimitValue(),
                                 max=motor.getHighLimitValue(),
                                 step=0.01,
-                                description=motor.pvName,
+                                description=motor.motorDesc,
                                 disabled=False
                               )
         
