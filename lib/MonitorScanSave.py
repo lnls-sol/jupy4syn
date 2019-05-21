@@ -218,7 +218,8 @@ class MonitorScanSave(widgets.Button):
                     # Waits for file creation by scan-gui
                     time.sleep(1.0)
 
-                    self.scan_names = self.get_scan_name(command, parser, self.number_repeats)
+                    # self.scan_names = self.get_scan_name_command(command, parser, self.number_repeats)
+                    self.scan_names = self.get_scan_name_js(save_file, self.number_repeats)
                     config_name = self.get_config_name(command, parser)
                     
                     self.plot_name = self.scan_names[-1] + "-jupy.png"
@@ -270,11 +271,33 @@ class MonitorScanSave(widgets.Button):
                     self.clear_threads = False
                 
                 time.sleep(0.5)
-                
-    def get_scan_name(self, command, parser, number_repeats):
+
+    def get_filename_js(self, js_file):
+        file_name = js_file["editFilename"]["value"]
+        file_path = js_file["editFilepath"]["value"]
+
+        if file_path == "":
+            file_path = "/tmp"
+
+        file_name = file_path + "/" + file_name
+
+        return file_name
+
+    def get_filename_command(self, command, parser):
         args = parser.parse_known_args(command.split(' '))
 
-        fileName = args[0].output
+        file_name = args[0].output
+
+        if file_name == "":
+            raise Exception("Can't load files from scan with empty Filepath and Filename.")
+
+        return file_name
+
+    def get_scan_name_command(self, command, parser, number_repeats):
+        # Waits for file to be written by scan writter
+        time.sleep(1.0)
+
+        fileName = self.get_filename_command(command, parser)
 
         scan_names = []
 
@@ -289,12 +312,33 @@ class MonitorScanSave(widgets.Button):
             else:
                 for i in range(number_repeats):
                     scan_names.append(fileName + "_" + str(cont - 1 + i).zfill(leadingZeros))
-#                 if self.synchronous:
-#                     newName = fileName + "_" + str(cont - 1).zfill(leadingZeros)
                 break
                 
         return scan_names
     
+    def get_scan_name_js(self, js_file, number_repeats):
+        # Waits for file to be written by scan writter
+        time.sleep(1.0)
+
+        fileName = self.get_filename_js(js_file)
+
+        scan_names = []
+
+        leadingZeros = 4
+        newName = ""
+        cont = 0
+        while(True):
+            cont += 1
+            newName = fileName + "_" + str(cont).zfill(leadingZeros)
+            if(os.path.isfile(newName)):
+                continue
+            else:
+                for i in range(number_repeats):
+                    scan_names.append(fileName + "_" + str(cont - 1 + i).zfill(leadingZeros))
+                break
+                
+        return scan_names
+
     def get_config_name(self, command, parser):
         args = parser.parse_known_args(command.split(' '))
 
