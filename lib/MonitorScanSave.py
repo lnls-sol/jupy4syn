@@ -276,7 +276,9 @@ class MonitorScanSave(widgets.Button):
         file_name = js_file["editFilename"]["value"]
         file_path = js_file["editFilepath"]["value"]
 
-        if file_path == "":
+        if file_name == "" and file_path == "":
+            raise Exception("Can't load files from scan with empty Filepath and Filename.")
+        elif file_path == "":
             file_path = "/tmp"
 
         file_name = file_path + "/" + file_name
@@ -513,14 +515,14 @@ class MonitorScanSave(widgets.Button):
             if self.export:
                 if updating:
                     if self.select_plot_option.value != 'Plot after ends with PyQt':
-                        img = IPython.display.Image(filename=self.scan_names[-1] + ".png")
-                        IPython.display.update_display(img, display_id='img')
-                    
+                        self.load_image_file(self.scan_names[-1] + ".png")
                     updating = False
             else:
                 if not updating:
                     if self.select_plot_option.value != 'Plot after ends with PyQt':
                         IPython.display.update_display("", display_id='img')
+
+                        self.fig_box.children = (self.fig,)
                     
                     updating = True
                 
