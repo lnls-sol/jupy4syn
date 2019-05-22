@@ -39,6 +39,19 @@ class MonitorScanSave(widgets.Button):
 
         self.scan_path = Path(self.scan_save_dir + self.scan_save_file)
         self.stop_path = Path(self.scan_save_dir + self.stop_file)
+
+        # Create scans, scanlogs and exports directories
+        p = Path("./scanlogs")
+        if not p.is_dir():
+            p.mkdir()
+
+        p = Path("./scans")
+        if not p.is_dir():
+            p.mkdir()
+
+        p = Path("./exports")
+        if not p.is_dir():
+            p.mkdir()
         
         # Logging
         self.output = widgets.Output()
