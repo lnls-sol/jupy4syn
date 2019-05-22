@@ -60,7 +60,7 @@ class PVMonitor(widgets.Button):
                 b.button_style='success'
 
                 # Stop displaying the motors widgets, show only button and text box
-                b.main_box.children = (b.main_box.children[0], b.text,)
+                b.main_box.children = (b.text, b)
 
                 logprint("Stopped monitoring PVs " + ', '.join([pv.pvname for pv in b.pv_list]), config=b.config)
 
@@ -72,7 +72,7 @@ class PVMonitor(widgets.Button):
                 b.button_style = 'danger'
 
                 # Stop displaying text box
-                b.main_box.children = (b.main_box.children[0],)
+                b.main_box.children = (b,)
 
                 # Get motors PV names from the text box
                 # Filter names
