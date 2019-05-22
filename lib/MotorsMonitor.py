@@ -113,5 +113,5 @@ class MotorsMonitor(widgets.Button):
                     widget.children[1].value = char_value
 
 
-    def display_monitor_motors(self):
+    def display(self):
         display(self.main_box, self.output)

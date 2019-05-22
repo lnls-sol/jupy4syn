@@ -42,14 +42,10 @@ class ManualAlignmentButton(widgets.Button):
             b.button_style = ''
             b.description='Aligning...'
 
-            # We should sleep for some time to give some responsiveness to the user
-            time.sleep(0.5)
-
-            # Stop thread to monitor the save file
             try:
                 logprint("Starting manual alignment", config=b.config)
-                subprocess.run(["pydm --hide-nav-bar --hide-menu-bar /usr/local/SOL/GUI/sol-widgets/examples/motor/slits.ui"],
-                                 shell=True, check=True)
+                subprocess.Popen(["pydm --hide-nav-bar --hide-menu-bar /usr/local/SOL/GUI/sol-widgets/examples/motor/slits.ui"],
+                                 shell=True)
 
                 logprint("Finished manual alignment", config=b.config)
             except Exception as e:
@@ -57,10 +53,13 @@ class ManualAlignmentButton(widgets.Button):
                 logprint("Error in manual alignment", "[ERROR]", config=b.config)
                 logprint(str(e), "[ERROR]", config=b.config)
 
+            # We should sleep for some time to give some responsiveness to the user
+            time.sleep(1.0)
+
             # Change button layout monitoring
             b.disabled = False
             b.button_style = 'success'
             b.description='Start Manual Alignment'
     
-    def display_start_button(self):
+    def display(self):
         display(self.start_button, self.output)

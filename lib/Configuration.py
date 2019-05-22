@@ -23,6 +23,6 @@ class Configuration():
 
         self.output = widgets.Output()
 
-    def display_configuration(self):
+    def display(self):
         display(self.checkbox_logprint_in_cell,
                 widgets.HBox([widgets.Label("Notebook's name: "), self.notebook_name]), self.output)

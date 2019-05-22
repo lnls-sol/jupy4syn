@@ -41,7 +41,7 @@ class PVMonitor(widgets.Button):
         self.on_click(self._monitor_button)
         
         # Main widget
-        self.main_box = widgets.VBox([self, self.text])
+        self.main_box = widgets.VBox([self.text, self])
         self.output = widgets.Output()
         
     @staticmethod
@@ -125,5 +125,5 @@ class PVMonitor(widgets.Button):
                 widget.children[1].value = "{:.3f}".format(value)
 
 
-    def display_monitor_pvs(self):
+    def display(self):
         display(self.main_box, self.output)

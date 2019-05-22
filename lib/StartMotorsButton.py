@@ -103,9 +103,5 @@ class StartMotorsButton(widgets.Button):
             b.description='Start Motor Initializaton'   
     
     
-    def display_start_button(self):
-        display(self.start_button, self.output)
-    
-    
-    def display_motors_targ_buttons(self):
-        display(self.target_value_buttons)
+    def display(self):
+        display(self.start_button, self.output, self.target_value_buttons)

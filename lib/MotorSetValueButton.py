@@ -79,5 +79,5 @@ class MotorSetValueButton(widgets.Button):
         return self.output 
     
     
-    def display_motor_button(self):
+    def display(self):
         display(self.box_motor_button(), self.output)

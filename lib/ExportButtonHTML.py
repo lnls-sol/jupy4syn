@@ -73,5 +73,5 @@ class ExportButtonHTML(widgets.Button):
             b.button_style = 'warning'
             b.description='Export Notebook to HTML'
         
-    def display_export_button(self):
+    def display(self):
         display(self, self.output)

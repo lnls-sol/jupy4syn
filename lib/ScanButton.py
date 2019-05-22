@@ -220,5 +220,5 @@ class ScanButton(widgets.Button):
                 box.disabled = False
                
 
-    def display_scan(self):
+    def display(self):
         display(self.main_box, self.output)

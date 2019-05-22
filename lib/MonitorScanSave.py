@@ -550,7 +550,7 @@ class MonitorScanSave(widgets.Button):
     def clear_image_file(self):
         IPython.display.update_display("", display_id='img')
     
-    def display_start_button(self):
+    def display(self):
         display(self.select_plot_option,
                 self.start_button, self.refresh_icon_box, self.fig_box, self.output)
         
