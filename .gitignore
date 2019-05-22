@@ -3,6 +3,7 @@ scanlogs/*
 exports/*
 .logs/*
 .vscode/*
+.devcontainer/*
 .ipynb_checkpoints/*
 */__pycache__/*
 __pycache__/*
