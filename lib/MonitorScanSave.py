@@ -165,7 +165,7 @@ class MonitorScanSave(widgets.Button):
                 b.select_plot_option.disabled = True
                 
                 if b.scan_gui_process.poll() is not None:
-                    b.scan_gui_process = subprocess.Popen(["pydm --hide-nav-bar --hide-menu-bar ~/work/scan-gui/scan_gui.py"],
+                    b.scan_gui_process = subprocess.Popen(["pydm --hide-nav-bar --hide-menu-bar /usr/local/SOL/GUI/scan-gui/scan_gui.py"],
                                      shell=True)
                 
                 # Change button monitor status
