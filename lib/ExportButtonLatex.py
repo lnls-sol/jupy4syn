@@ -50,9 +50,13 @@ class ExportButtonLatex(widgets.Button):
                 time_stamp = time.strftime("%Y-%m-%d-%H:%M:%S", ts)
                 output_file = time_stamp + '-' + b.notebook_name
 
+                time.sleep(1.0)
+
                 display(Javascript('IPython.notebook.save_checkpoint();'))
                 
                 os.system("python3 -m nbconvert ./" + b.notebook_name + ".ipynb --template=nbextensions --output-dir=./exports --output=" + output_file + " --to latex")
+                
+                time.sleep(1.0)
                 
                 for plot in b.plots_list:
                     plot.export = False
