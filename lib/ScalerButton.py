@@ -53,7 +53,7 @@ class ScalerButton(widgets.Button):
 
             try:
                 logprint("Starting Scaler", config=b.config)
-                subprocess.Popen(["pydm --hide-nav-bar --hide-menu-bar " + b.macro.value + " /usr/local/SOL/GUI/Scaler_GUI/scaler.ui"],
+                subprocess.Popen(["pydm -m \"" + b.macro.value + "\" /usr/local/SOL/GUI/Scaler_GUI/scaler.py"],
                                  shell=True)
 
                 logprint("Finished openning Scaler", config=b.config)
