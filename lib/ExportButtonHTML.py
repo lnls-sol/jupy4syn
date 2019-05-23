@@ -70,6 +70,9 @@ class ExportButtonHTML(widgets.Button):
                 for plot in b.plots_list:
                     plot.export = True
 
+                # Time sleep to the plot_list thread update the display
+                time.sleep(1.0)
+
                 # Get time stamp for the export name
                 ts = time.gmtime()
                 time_stamp = time.strftime("%Y-%m-%d-%H:%M:%S", ts)

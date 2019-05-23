@@ -69,6 +69,9 @@ class ExportButtonLatex(widgets.Button):
                 # plots export flag to True to start the export
                 for plot in b.plots_list:
                     plot.export = True
+                
+                # Time sleep to the plot_list thread update the display
+                time.sleep(1.0)
         
                 # Get time stamp for the export name
                 ts = time.gmtime()
