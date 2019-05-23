@@ -45,7 +45,7 @@ class ManualAlignmentButton(widgets.Button):
             # Create a subprocess with the slits script from sol-widgets
             try:
                 logprint("Starting manual alignment", config=b.config)
-                subprocess.Popen(["slits"],
+                subprocess.Popen(["/usr/local/SOL/GUI/sol-widgets/examples/motor/slits"],
                                  shell=True)
 
                 logprint("Finished manual alignment", config=b.config)
