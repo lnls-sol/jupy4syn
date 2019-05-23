@@ -20,18 +20,18 @@ class ManualAlignmentButton(widgets.Button):
         self.tooltip = 'Click me'
         self.icon = ''
         self.layout = widgets.Layout(width='300px')
-               
-        # Logging
-        self.output = widgets.Output()
         
         # Set callback function for click event
-        self.on_click(self._start_button)
+        self.on_click(self._click_button)
         
-        # Widgets displays
-        self.start_button = widgets.VBox([self])
+        # Logging
+        self.output = widgets.Output()
+
+        # Widgets display box
+        self.display_box = widgets.VBox([self, self.output])
         
     @staticmethod
-    def _start_button(b):
+    def _click_button(b):
         # Clear previous logs outputs
         b.output.clear_output()
         
@@ -42,9 +42,10 @@ class ManualAlignmentButton(widgets.Button):
             b.button_style = ''
             b.description='Aligning...'
 
+            # Create a subprocess with the slits script from sol-widgets
             try:
                 logprint("Starting manual alignment", config=b.config)
-                subprocess.Popen(["pydm --hide-nav-bar --hide-menu-bar /usr/local/SOL/GUI/sol-widgets/examples/motor/slits.ui"],
+                subprocess.Popen(["/usr/local/SOL/GUI/sol-widgets/examples/motor/slits"],
                                  shell=True)
 
                 logprint("Finished manual alignment", config=b.config)
@@ -56,10 +57,10 @@ class ManualAlignmentButton(widgets.Button):
             # We should sleep for some time to give some responsiveness to the user
             time.sleep(1.0)
 
-            # Change button layout monitoring
+            # Reenable button
             b.disabled = False
             b.button_style = 'success'
             b.description='Start Manual Alignment'
     
     def display(self):
-        display(self.start_button, self.output)
+        display(self.display_box)

@@ -1,5 +1,5 @@
 import ipywidgets as widgets
-from IPython.display import display
+from IPython.display import display, Javascript
 import time
 from .utils import logprint
 import os
@@ -14,6 +14,7 @@ class ExportButtonLatex(widgets.Button):
         self.notebook_name = config.notebook_name.value
         self.plots_list = config.plots_list
 
+        # class Button values for ExportButtonLatex
         self.description='Export Notebook to Latex'
         self.disabled=False
         self.button_style='warning' # 'success', 'info', 'warning', 'danger' or ''
@@ -21,12 +22,17 @@ class ExportButtonLatex(widgets.Button):
         self.icon=''
         self.layout = widgets.Layout(width='300px')
     
-        self.on_click(self._export_button)
+        # Set callback function for click event
+        self.on_click(self._click_button)
 
+        # Logging
         self.output = widgets.Output()
+
+        # Widgets display box
+        self.display_box = widgets.VBox([self, self.output])   
     
     @staticmethod
-    def _export_button(b):
+    def _click_button(b):
         with b.output:
             # Change button to a "clicked status"
             b.disabled = True
@@ -36,28 +42,47 @@ class ExportButtonLatex(widgets.Button):
             # We should sleep for some time to give some responsiveness to the user
             time.sleep(0.5)
 
-            # Get actual values
+            # Get configuration run-time values
             b.notebook_name = b.config.notebook_name.value
             b.plots_list = b.config.plots_list
+
+            # Check if notebook name is not empty, if it is, print an error message and
+            # change button status temporarily to an error descripton. Then restart button.
+            if b.notebook_name == "":
+                logprint("Notebook name not defined in configuration cell", "[ERROR]", config=b.config)
+                # Change button status to a "error status"
+                b.disabled = True
+                b.button_style = 'danger'
+                b.description='ERROR. Notebook\'s name not set'
+
+                time.sleep(2.0)
+
+                # Reenable button
+                b.disabled = False
+                b.button_style = 'warning'
+                b.description='Export Notebook to Latex'
+
+                return
             
             try:
+                # For every plot registered in the plots_list, we have to set these
+                # plots export flag to True to start the export
                 for plot in b.plots_list:
                     plot.export = True
-                
-                from IPython.display import Javascript
         
+                # Get time stamp for the export name
                 ts = time.gmtime()
                 time_stamp = time.strftime("%Y-%m-%d-%H:%M:%S", ts)
                 output_file = time_stamp + '-' + b.notebook_name
 
-                time.sleep(1.0)
-
+                # Save the notebook to display the static images
                 display(Javascript('IPython.notebook.save_checkpoint();'))
                 
+                # Call nbconvert to do the export
                 os.system("python3 -m nbconvert ./" + b.notebook_name + ".ipynb --template=nbextensions --output-dir=./exports --output=" + output_file + " --to latex")
                 
-                time.sleep(1.0)
-                
+                # For every plot registered in the plots_list, we have to set these
+                # plots export flag to False to end the export
                 for plot in b.plots_list:
                     plot.export = False
 
@@ -70,5 +95,5 @@ class ExportButtonLatex(widgets.Button):
             b.description='Export Notebook to Latex'
         
     def display(self):
-        display(self, self.output)
+        display(self.display_box)
                     
