@@ -2,9 +2,9 @@ import ipywidgets as widgets
 from IPython.display import display
 import time
 import subprocess
-from utils import logprint
+from .utils import logprint
 from pathlib import Path
-from JupyScan import JupyScan
+from .JupyScan import JupyScan
 
 
 class ScanButton(widgets.Button):
