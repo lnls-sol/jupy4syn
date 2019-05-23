@@ -11,7 +11,6 @@ from .utils import logprint
 from pathlib import Path
 from .ScanParser import ScanParser
 import plotly.graph_objs as go
-import plotly.io as pio
 from plotly import tools
 
 
@@ -442,10 +441,7 @@ class MonitorScanSave(widgets.Button):
 
                     for j in range(len(dfs[i].columns) - number_motors): 
                         self.fig['data'][i + j*len(dfs)]['x'] = dfs[i].index.values
-                        self.fig['data'][i + j*len(dfs)]['y'] = dfs[i][dfs[i].columns[number_motors + j]].values                           
-                
-            # save image as png
-            pio.write_image(self.fig, self.plot_name)
+                        self.fig['data'][i + j*len(dfs)]['y'] = dfs[i][dfs[i].columns[number_motors + j]].values
         
         # Plot scan-gui pyqt graph
         if self.select_plot_option.value == 'Plot after ends with PyQt':
