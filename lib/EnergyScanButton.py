@@ -89,27 +89,29 @@ class EnergyScanButton(widgets.Button):
             layout = widgets.Layout(width='36px')
         )     
 
-        self.checkbox_optimum.observe(self.change_checkbox_optimum, names=['value'])
+        self.checkbox_optimum.observe(self._change_checkbox_optimum, names=['value'])
         
-        # class Button values for ScanButton
-        self.description='Start Scan'
+        # class Button values for EnergyScanButton
+        self.description='Start Energy Scan'
         self.disabled=False
         self.button_style='success'
         self.tooltip='Click me'
         self.icon=''
         self.layout = widgets.Layout(width='300px')
+
+        # Set callback function for click event
+        self.on_click(self._scan_button)
         
-        # Boxes
+        # PV's Values
         self.pv_values = {}
         
-        # PVs
+        # Motor list
         self.motor_list = []
         
-        # Set callback function for click event
+        # Callback flags
         self.on_scan = False
         self.scan_ended = False
         self.config_loaded = False
-        self.on_click(self._scan_button)
         
         # Main widget
         self.main_box = widgets.VBox([widgets.HBox([widgets.Label("Motors names", layout=widgets.Layout(width='150px')), self.text_motors]),
@@ -126,7 +128,7 @@ class EnergyScanButton(widgets.Button):
         self.output = widgets.Output()
 
     
-    def change_checkbox_optimum(self, change):
+    def _change_checkbox_optimum(self, change):
         self.text_optimum.disabled = not change.new
     
         
@@ -155,7 +157,16 @@ class EnergyScanButton(widgets.Button):
             b.motor_list = []
 
             # Get motors names from the text box
+            names_comma_space_ent = []
             motor_list_names = b.text_motors.value.split(' ')
+            for name in motor_list_names:
+                    names_comma_space = name.split(",")
+
+                    for name_wout_comma in names_comma_space:
+                        names_comma_space_ent.append(name_wout_comma.split("\n"))
+
+            lin_names = sum(names_comma_space_ent, [])
+            motor_list_names = [name for name in lin_names if name != "" and name != "\n"]
             logprint("Scanning on motors" + ', '.join(motor_list_names), config=b.config)
 
             # Get config file name from the text box
@@ -169,10 +180,10 @@ class EnergyScanButton(widgets.Button):
             time = []
             try:
                 # Get lists from text boxes
-                start = [eval(b.text_start.value)]
-                end = [eval(b.text_end.value)]
-                step_or_points = [eval(b.text_step_points.value)]
-                time = [eval(b.text_time.value)]
+                start = b.text_start.value
+                end = b.text_end.value
+                step_or_points = b.text_step_points.value
+                time = b.text_time.value
 
                 logprint("Loaded 'start, end, step or points, time' scan parameters", config=b.config)
             except Exception as e:
@@ -197,19 +208,31 @@ class EnergyScanButton(widgets.Button):
 
             # Get sync option
             sync = False
+
+            # Edge
+            edge = 0.0
             # Initiate scan
             try:
-                js = JupyScan(motor_list_names, start, end, step_or_points, time, config_name, optimum, sync, output)
+                command = "/usr/local/SOL/scan-utils/energy-scan" + \
+                          " -c " + config_name + \
+                          " -o " + output + \
+                          " --motor " + ' '.join(motor_list_names) + \
+                          " --start " + start + \
+                          " --end " + end + \
+                          " --step-or-points " + step_or_points + \
+                          " --time " + time + \
+                          " --edge " + str(edge)
                 
-                js.run()
-                logprint("Finished scan, output saved in file " + output, config=b.config)
+                subprocess.run([command],shell=True, check=True)
+                logprint("Started scan, output saved in file " + output, config=b.config)
+
             except Exception as e:
                 # If any error occurs, log that but dont stop code exection
-                logprint("Error in trying to scan", "[ERROR]", config=b.config)
+                logprint("Error in trying to energy scan", "[ERROR]", config=b.config)
                 logprint(str(e), "[ERROR]", config=b.config)
 
             # Change button appearence
-            b.description = 'Start Scan'
+            b.description = 'Start Energy Scan'
             b.button_style = 'success'
 
             # Re enable button
