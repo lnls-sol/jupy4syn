@@ -5,7 +5,10 @@ import subprocess
 from .utils import logprint
 from pathlib import Path
 from .JupyScan import JupyScan
-
+import pandas as pd
+import plotly.graph_objs as go
+from plotly import tools
+import os
 
 class EnergyScanButton(widgets.Button):
     
@@ -107,11 +110,16 @@ class EnergyScanButton(widgets.Button):
         
         # Motor list
         self.motor_list = []
+
+        self.scan_names = []
         
         # Callback flags
         self.on_scan = False
         self.scan_ended = False
         self.config_loaded = False
+
+        self.fig = go.FigureWidget()
+        self.fig_box = widgets.Box()
         
         # Main widget
         self.main_box = widgets.VBox([widgets.HBox([widgets.Label("Motors names", layout=widgets.Layout(width='150px')), self.text_motors]),
@@ -231,6 +239,39 @@ class EnergyScanButton(widgets.Button):
                 logprint("Error in trying to energy scan", "[ERROR]", config=b.config)
                 logprint(str(e), "[ERROR]", config=b.config)
 
+            b.scan_names = b.get_scan_name(output, 1)
+
+            dfs = []
+            dfs.append(pd.DataFrame())
+            while dfs[0].empty:
+                label = []
+                dfs, label = b.update_pd(b.scan_names, label)
+
+            number_motors = len(motor_list_names)
+
+            b.create_figure(len(dfs[0].columns) - number_motors)
+            
+
+            # Plot
+            try:
+                for i in range(len(dfs)):
+                    if dfs[i].empty:
+                        continue
+
+                    diff_df = dfs[i].diff().dropna()
+
+                    for j in range(len(dfs[i].columns) - number_motors): 
+                        # Plot function
+                        b.fig['data'][i + j*len(dfs) + j]['x'] = dfs[i].index.values
+                        b.fig['data'][i + j*len(dfs) + j]['y'] = dfs[i][dfs[i].columns[number_motors + j]].values
+
+                        # Plot Diff function
+                        b.fig['data'][i + 1 + j*len(dfs) + j]['x'] = diff_df.index.values
+                        b.fig['data'][i + 1 + j*len(dfs) + j]['y'] = diff_df[diff_df.columns[number_motors + j]].values
+            except Exception as e:
+                logprint("Error in trying to plot energy scan", "[ERROR]", config=b.config)
+                logprint(str(e), "[ERROR]", config=b.config)
+
             # Change button appearence
             b.description = 'Start Energy Scan'
             b.button_style = 'success'
@@ -242,6 +283,89 @@ class EnergyScanButton(widgets.Button):
             for box in boxes:
                 box.disabled = False
                
+    def get_scan_name(self, fileName, number_repeats):
+        # Waits for file to be written by scan writter
+        time.sleep(1.0)
+
+        scan_names = []
+
+        leadingZeros = 4
+        newName = ""
+        cont = 0
+        while(True):
+            cont += 1
+            newName = fileName + "_" + str(cont).zfill(leadingZeros)
+            if(os.path.isfile(newName)):
+                continue
+            else:
+                for i in range(number_repeats):
+                    scan_names.append(fileName + "_" + str(cont - 1 + i).zfill(leadingZeros))
+                break
+                
+        return scan_names
+
+    def update_pd(self, default_names, label):
+        dfs = []
+        number_non_empty = len(default_names)
+
+        for default_name in default_names:
+            try:
+                dfs.append(pd.read_csv(default_name, sep=' ', comment='#', header=None))
+            except:
+                dfs.append(pd.DataFrame())
+                number_non_empty -= 1
+
+        if number_non_empty == 0:
+            return dfs, label
+
+        filtered_label = label
+        if not label:
+            labels = []
+            with open(default_names[0]) as file:
+                for i, line in enumerate(file):
+                    if i == 6:
+                        self.number_reads = (int(line.split(' ')[1]))
+                    elif i == 8:
+                        labels = line.split(' ')[1:]
+                        break
+
+            labels = list(filter(lambda x: x != '', labels))
+
+            for item in labels:
+                filtered_label.append(item.rstrip('\n'))
+
+            label = filtered_label
+
+        for df in dfs:
+            if not df.empty:
+                df.columns = pd.Index(filtered_label, dtype='object')
+        
+        return dfs, label
+
+    def create_figure(self, number_traces):
+        self.traces = []
+        
+        self.fig = go.FigureWidget(tools.make_subplots(rows=number_traces, cols=1, print_grid=False))
+        
+        for i in range(number_traces):
+            self.traces.append([])
+
+            for _ in range(len(self.scan_names)):
+                trace = go.Scatter(
+                    x=[], y=[], # Data
+                    mode='lines+markers', name='f' + str(i+1)
+                )
+                diff_trace = go.Scatter(
+                    x=[], y=[], # Data
+                    mode='lines+markers', name='df' + str(i+1)
+                )
+
+                self.traces[i].append(trace)
+                self.fig.append_trace(trace, i + 1, 1) # using i + 1 because plot index starts at 1
+                self.fig.append_trace(diff_trace, i + 1, 1) # using i + 1 because plot index starts at 1
+
+        self.fig['layout'].update(title='Scan', plot_bgcolor='rgb(230, 230, 230)')
+        self.fig_box.children = (self.fig,)
 
     def display(self):
-        display(self.main_box, self.output)
+        display(self.main_box, self.fig_box, self.output)
