@@ -347,22 +347,31 @@ class EnergyScanButton(widgets.Button):
         
         self.fig = go.FigureWidget(tools.make_subplots(rows=number_traces, cols=1, print_grid=False))
         
-        for i in range(number_traces):
+        for i in range(1, number_traces + 1):
             self.traces.append([])
 
             for _ in range(len(self.scan_names)):
                 trace = go.Scatter(
                     x=[], y=[], # Data
-                    mode='lines+markers', name='f' + str(i+1)
+                    mode='lines+markers', name='f' + str(i+1), yaxis="y"+(str(2*i) if i != 0 else ""), xaxis="x"+(str(2*i) if i != 0 else "")
                 )
+                self.fig['layout']['yaxis'+str(2*i+1)] = dict(overlaying='y'+(str(2*i) if i != 0 else ""), anchor="x"+(str(2*i) if i != 0 else ""), side='right', showgrid=False, title="y"+str(2*i+1))
                 diff_trace = go.Scatter(
                     x=[], y=[], # Data
-                    mode='lines+markers', name='df' + str(i+1)
+                    mode='lines+markers', name='df' + str(i+1), yaxis="y"+str(2*i+1), xaxis="x"+(str(2*i) if i != 0 else "")
                 )
 
-                self.traces[i].append(trace)
-                self.fig.append_trace(trace, i + 1, 1) # using i + 1 because plot index starts at 1
-                self.fig.append_trace(diff_trace, i + 1, 1) # using i + 1 because plot index starts at 1
+                self.traces[i-1].append(trace)
+                self.fig.append_trace(trace, i, 1) # using i + 1 because plot index starts at 1
+                self.fig['layout']['yaxis'+str(2*i)] = dict(anchor="x"+(str(2*i)) if i-1 != 0 else ""), side='left', showgrid=True, title="y"+str(2*i))
+                # self.fig['data'][2*i].update(yaxis="y"+(str(2*i) if i != 0 else ""))
+                # self.fig['layout']['yaxis'+(str(2*i) if i != 0 else "")].update(showgrid=True, title='y'+(str(2*i) if i != 0 else ""))
+                # self.fig['layout']['yaxis'+(str(2*i) if i != 0 else "")] = dict(anchor="x"+(str(i) if i != 0 else "", side='right', showgrid=False, title=‘'y'+(str(2*i) if i != 0 else ""))
+                self.fig.append_trace(diff_trace, i, 1) # using i + 1 because plot index starts at 1
+                # self.fig['layout']['yaxis'+str(2*i+1)] = dict(overlaying='y'+(str(2*i) if i != 0 else ""), anchor="x"+(str(i) if i != 0 else "", side='right', showgrid=False, title=‘'y'+(str(2*i) if i != 0 else ""))
+                # self.fig['data'][2*i+1].update(yaxis="y"+str(2*i+1))
+                # self.fig['layout']['yaxis'+str(2*i+1)].update(showgrid=True, title='y'+str(2*i+1))
+                
 
         self.fig['layout'].update(title='Scan', plot_bgcolor='rgb(230, 230, 230)')
         self.fig_box.children = (self.fig,)
