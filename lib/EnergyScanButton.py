@@ -9,6 +9,7 @@ import pandas as pd
 import plotly.graph_objs as go
 from plotly import tools
 import os
+import numpy as np
 
 class EnergyScanButton(widgets.Button):
     
@@ -250,7 +251,6 @@ class EnergyScanButton(widgets.Button):
             number_motors = len(motor_list_names)
 
             b.create_figure(len(dfs[0].columns) - number_motors)
-            
 
             # Plot
             try:
@@ -259,15 +259,32 @@ class EnergyScanButton(widgets.Button):
                         continue
 
                     diff_df = dfs[i].diff().dropna()
+                    diff_diff_df = diff_df[i].diff().dropna()
 
-                    for j in range(len(dfs[i].columns) - number_motors): 
+                    for j in range(len(dfs[i].columns) - number_motors):
+                        x = np.arange(-500.0, 500.0, 2)
+                        y = 1.5*x**3 - x**2 - 115*x + 79 - np.sqrt(3/2*np.abs(x))
+                        dy = np.divide(np.diff(y), np.diff(x))
+                        ddy = np.divide(np.diff(dy), np.diff(x[:-1]))
+
                         # Plot function
                         b.fig['data'][i + j*len(dfs) + j]['x'] = dfs[i].index.values
                         b.fig['data'][i + j*len(dfs) + j]['y'] = dfs[i][dfs[i].columns[number_motors + j]].values
+                        # b.fig['data'][i + j*len(dfs) + j]['x'] = x
+                        # b.fig['data'][i + j*len(dfs) + j]['y'] = y
 
-                        # Plot Diff function
+                        # Plot First Diff function
                         b.fig['data'][i + 1 + j*len(dfs) + j]['x'] = diff_df.index.values
-                        b.fig['data'][i + 1 + j*len(dfs) + j]['y'] = diff_df[diff_df.columns[number_motors + j]].values
+                        b.fig['data'][i + 1 + j*len(dfs) + j]['y'] = (diff_df[diff_df.columns[number_motors + j]] / diff_df[0]).values
+                        # b.fig['data'][i + 1 + j*len(dfs) + j]['x'] = x
+                        # b.fig['data'][i + 1 + j*len(dfs) + j]['y'] = dy
+
+                        # Plot Second Diff function
+                        b.fig['data'][i + 2 + j*len(dfs) + j]['x'] = diff_diff_df.index.values
+                        b.fig['data'][i + 2 + j*len(dfs) + j]['y'] = (diff_diff_df[diff_diff_df.columns[number_motors + j]] / diff_df[0]).values
+                        # b.fig['data'][i + 2 + j*len(dfs) + j]['x'] = x[:-1]
+                        # b.fig['data'][i + 2 + j*len(dfs) + j]['y'] = ddy
+
             except Exception as e:
                 logprint("Error in trying to plot energy scan", "[ERROR]", config=b.config)
                 logprint(str(e), "[ERROR]", config=b.config)
@@ -353,19 +370,29 @@ class EnergyScanButton(widgets.Button):
             for _ in range(len(self.scan_names)):
                 trace = go.Scatter(
                     x=[], y=[], # Data
-                    mode='lines+markers', name='f' + str(i), showlegend=False
+                    mode='lines+markers', name='f' + str(i), showlegend=True
                 )
 
                 diff_trace = go.Scatter(
                     x=[], y=[], # Data
-                    mode='lines+markers', name='df' + str(i), showlegend=False
+                    mode='lines+markers', name='df' + str(i), showlegend=True
+                )
+
+                diff_diff_trace = go.Scatter(
+                    x=[], y=[], # Data
+                    mode='lines+markers', name='ddf' + str(i), showlegend=True
                 )
 
                 self.traces[i-1].append(trace)
                 self.fig.append_trace(trace, i, 1) # using i + 1 because plot index starts at 1
                 self.fig.append_trace(diff_trace, i, 1) # using i + 1 because plot index starts at 1
-                self.fig['data'][2*(i-1)+1].update(yaxis="y"+str(number_traces+i))
-                self.fig['layout']['yaxis'+str(number_traces+i)] = dict(overlaying="y"+str(i), anchor="x"+str(i), side="right")                
+                self.fig.append_trace(diff_diff_trace, i, 1) # using i + 1 because plot index starts at 1
+
+                self.fig['data'][3*(i-1)+1].update(yaxis="y"+str(number_traces+i*2))
+                self.fig['data'][3*(i-1)+2].update(yaxis="y"+str(number_traces+i*2 + 1))
+                
+                self.fig['layout']['yaxis'+str(number_traces+i*2)] = dict(overlaying="y"+str(i), anchor="x"+str(i), side="right")
+                self.fig['layout']['yaxis'+str(number_traces+i*2 + 1)] = dict(overlaying="y"+str(i), anchor="x"+str(i), side="right")                
 
         self.fig['layout'].update(title='Scan', plot_bgcolor='rgb(230, 230, 230)')
         self.fig_box.children = (self.fig,)
