@@ -269,7 +269,7 @@ class EnergyScanButton(widgets.Button):
 
                         # Plot function
                         b.fig['data'][i + j*len(dfs) + j]['x'] = dfs[i].index.values
-                        b.fig['data'][i + j*len(dfs) + j]['y'] = dfs[i][dfs[i].columns[number_motors + j]].values
+                        b.fig['data'][i + j*len(dfs) + j]['y'] = dfs[i][dfs[i]. columns[number_motors + j]].values
                         # b.fig['data'][i + j*len(dfs) + j]['x'] = x
                         # b.fig['data'][i + j*len(dfs) + j]['y'] = y
 
