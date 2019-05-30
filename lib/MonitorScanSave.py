@@ -143,11 +143,17 @@ class MonitorScanSave(widgets.Button):
                 # Stop thread to monitor the save file
                 try:
                     logprint("Stopping threads", config=b.config)
+                    b.interrupted_scan = True
+                    b.started_scan = False
+
                     b.thread.join()
                     b.fig_thread.join()
                     b.refresh_thread.join()
                     
                     b.clear_threads = False
+                    time.sleep(1.5)
+
+                    b.interrupted_scan = False
                 except Exception as e:
                     # If any error occurs, log that but dont stop code exection
                     logprint("Error in stopping threads", "[ERROR]", config=b.config)
@@ -384,10 +390,12 @@ class MonitorScanSave(widgets.Button):
             labels = []
             with open(default_names[0]) as file:
                 for i, line in enumerate(file):
-                    if i == 6:
-                        self.number_reads = (int(line.split(' ')[1]))
-                    elif i == 8:
+                    if line[0:2] == "#M":
+                        self.number_reads = int(line.split(' ')[1])
+                    elif line[0:2] == "#L":
                         labels = line.split(' ')[1:]
+                    elif line[0] != "#":
+                        # First linde with data
                         break
 
             labels = list(filter(lambda x: x != '', labels))
@@ -416,7 +424,7 @@ class MonitorScanSave(widgets.Button):
             self.create_figure(len(dfs[0].columns) - number_motors)
             self.clear_image_file()
         
-        while dfs[-1].shape[0] < self.number_reads:
+        while dfs[-1].shape[0] < self.number_reads and self.started_scan == True:
             dfs, label = self.update_pd(self.scan_names, label)
             if self.select_plot_option.value == "Live Plot":
                 for i in range(len(dfs)):
@@ -444,7 +452,7 @@ class MonitorScanSave(widgets.Button):
                         self.fig['data'][i + j*len(dfs)]['y'] = dfs[i][dfs[i].columns[number_motors + j]].values
         
         # Plot scan-gui pyqt graph
-        if self.select_plot_option.value == 'Plot after ends with PyQt':
+        if self.select_plot_option.value == 'Plot after ends with PyQt' and self.interrupted_scan == False:
             # Waits for scan-gui to save the plot
             time.sleep(3.0)
 
