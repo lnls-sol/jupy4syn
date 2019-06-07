@@ -23,11 +23,8 @@ class PVSetter(widgets.Button):
         self.pv_name = pv_name
         
         # Bounded float text associated to the button
-        self.bounded_float = widgets.BoundedFloatText(
-                                value=self.pv.value,
-                                min=self.pv.lower_ctrl_limit,
-                                max=self.pv.upper_ctrl_limit,
-                                step=1/10**max(0, self.pv.precision - 2),
+        self.bounded_text = widgets.Text(
+                                value=str(self.pv.value),
                                 description=self.pv_desc,
                                 disabled=False
                               )
@@ -56,14 +53,14 @@ class PVSetter(widgets.Button):
             b.disabled = True
             b.button_style = ''
 
-            logprint("Setting PV " + b.pv_name + " to value " + str(b.bounded_float.value), config=b.config)
+            logprint("Setting PV " + b.pv_name + " to value " + b.bounded_text.value, config=b.config)
             try:
                 # Move the motor to target absolute position
-                b.pv.put(b.bounded_float.value, wait=True)
-                logprint("Set value " + str(b.bounded_float.value) + " to PV " + b.pv_name, config=b.config)
+                b.pv.put(b.bounded_text.value, wait=False)
+                logprint("Set value " + b.bounded_text.value + " to PV " + b.pv_name, config=b.config)
             except Exception as e:
                 # If any error occurs, log that but dont stop code exection
-                logprint("Error in setting value " + str(b.bounded_float.value) + " to PV " + b.pv_name, "[ERROR]", config=b.config)
+                logprint("Error in setting value " + b.bounded_text.value + " to PV " + b.pv_name, "[ERROR]", config=b.config)
                 logprint(str(e), "[ERROR]", config=b.config)
 
             # Change button layout back to normal
@@ -72,7 +69,7 @@ class PVSetter(widgets.Button):
         
 
     def box_pv_button(self):
-        return widgets.HBox([self.bounded_float, self])    
+        return widgets.HBox([self.bounded_text, self])    
     
     def display(self):
         display(self.box_pv_button(), self.output)
