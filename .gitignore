@@ -1,12 +1,18 @@
+# VSCode files
+.vscode/
+*/.code-workspace/
+.devcontainer/*
+
+# Generated files
 scans/*
 scanlogs/*
 exports/*
-.logs/*
-.vscode/*
-.devcontainer/*
-.ipynb_checkpoints/*
-*/__pycache__/*
-__pycache__/*
 
+# Log files
+.logs/*
+
+# Caches
+.ipynb_checkpoints/*
+__pycache__/
 *.pyc
 core
