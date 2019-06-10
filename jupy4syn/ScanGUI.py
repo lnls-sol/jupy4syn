@@ -4,7 +4,7 @@ import subprocess
 import threading
 import time
 
-# JSON and Pandas
+# Auxiliar packages
 import json
 import pandas as pd
 
@@ -17,9 +17,9 @@ import plotly.graph_objs as go
 from plotly import tools
 
 # Jupy4Syn
-from .utils import logprint
 from .Configuration import Configuration
 from .ScanParser import ScanParser
+from .utils import logprint
 
 class ScanGUI(widgets.Button):
     
@@ -396,7 +396,7 @@ class ScanGUI(widgets.Button):
         if not label:
             labels = []
             with open(default_names[0]) as file:
-                for i, line in enumerate(file):
+                for _, line in enumerate(file):
                     if line[0:2] == "#M":
                         self.number_reads = int(line.split(' ')[1])
                     elif line[0:2] == "#L":

@@ -1,8 +1,12 @@
 import argparse
+
+# Widgets
 from IPython.display import display
+
+# Py4Syn and scan-utils
+from py4syn.utils import scan as scanModule
 from scan_utils.scan import ScanOperationCLI
 from scan_utils import cleanup, die
-from py4syn.utils import scan as scanModule
 
 
 class JupyScan(ScanOperationCLI):

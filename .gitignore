@@ -1,6 +1,6 @@
 # VSCode files
 .vscode/
-*/.code-workspace/
+lib/.code-workspace.code-workspace
 .devcontainer/*
 
 # Generated files

@@ -1,15 +1,24 @@
+import os
+from pathlib import Path
+import subprocess
+import time
+
+# Auxiliar packages
+import numpy as np
+import pandas as pd
+
+# Widgets
 import ipywidgets as widgets
 from IPython.display import display
-import time
-import subprocess
-from .utils import logprint
-from pathlib import Path
-from .JupyScan import JupyScan
-import pandas as pd
+
+# Plotly
 import plotly.graph_objs as go
 from plotly import tools
-import os
-import numpy as np
+
+# Jupy4Syn
+from .JupyScan import JupyScan
+from .utils import logprint
+
 
 class EnergyScanButton(widgets.Button):
     
@@ -210,13 +219,6 @@ class EnergyScanButton(widgets.Button):
             
             # Put the path to the output
             output = str(mypath) + '/' + output
-            
-            # Get optimum move option
-#             optimum = b.text_optimum.value if b.checkbox_optimum.value else False
-            optimum = False
-
-            # Get sync option
-            sync = False
 
             # Edge
             edge = 0.0

@@ -1,11 +1,15 @@
+import os
+import time
+
+# Widgets
 import ipywidgets as widgets
 from IPython.display import display, Javascript
-import time
+
+# Jupy4Syn
 from .utils import logprint
-import os
 
 
-class ExportButtonLatex(widgets.Button):
+class ExportButtonHTML(widgets.Button):
     def __init__(self, config, *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
         
@@ -14,8 +18,8 @@ class ExportButtonLatex(widgets.Button):
         self.notebook_name = config.notebook_name.value
         self.plots_list = config.plots_list
 
-        # class Button values for ExportButtonLatex
-        self.description='Export Notebook to Latex'
+        # class Button values for ExportButtonHTML
+        self.description='Export Notebook to HTML'
         self.disabled=False
         self.button_style='warning' # 'success', 'info', 'warning', 'danger' or ''
         self.tooltip='Click me'
@@ -29,7 +33,7 @@ class ExportButtonLatex(widgets.Button):
         self.output = widgets.Output()
 
         # Widgets display box
-        self.display_box = widgets.VBox([self, self.output])   
+        self.display_box = widgets.VBox([self, self.output])
     
     @staticmethod
     def _click_button(b):
@@ -60,19 +64,19 @@ class ExportButtonLatex(widgets.Button):
                 # Reenable button
                 b.disabled = False
                 b.button_style = 'warning'
-                b.description='Export Notebook to Latex'
+                b.description='Export Notebook to HTML'
 
                 return
-            
+                
             try:
                 # For every plot registered in the plots_list, we have to set these
                 # plots export flag to True to start the export
                 for plot in b.plots_list:
                     plot.export = True
-                
+
                 # Time sleep to the plot_list thread update the display
                 time.sleep(1.0)
-        
+
                 # Get time stamp for the export name
                 ts = time.gmtime()
                 time_stamp = time.strftime("%Y-%m-%d-%H:%M:%S", ts)
@@ -82,8 +86,8 @@ class ExportButtonLatex(widgets.Button):
                 display(Javascript('IPython.notebook.save_checkpoint();'))
                 
                 # Call nbconvert to do the export
-                os.system("python3 -m nbconvert ./" + b.notebook_name + ".ipynb --template=nbextensions --output-dir=./exports --output=" + output_file + " --to latex")
-                
+                os.system("python3 -m nbconvert ./" + b.notebook_name + ".ipynb --template=nbextensions --output-dir=./exports --output=" + output_file + " --to html")
+
                 # For every plot registered in the plots_list, we have to set these
                 # plots export flag to False to end the export
                 for plot in b.plots_list:
@@ -95,8 +99,7 @@ class ExportButtonLatex(widgets.Button):
             # Reenable button
             b.disabled = False
             b.button_style = 'warning'
-            b.description='Export Notebook to Latex'
+            b.description='Export Notebook to HTML'
         
     def display(self):
         display(self.display_box)
-                    
