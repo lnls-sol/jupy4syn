@@ -264,28 +264,17 @@ class EnergyScanButton(widgets.Button):
                     diff_diff_df = diff_df[i].diff().dropna()
 
                     for j in range(len(dfs[i].columns) - number_motors):
-                        x = np.arange(-500.0, 500.0, 2)
-                        y = 1.5*x**3 - x**2 - 115*x + 79 - np.sqrt(3/2*np.abs(x))
-                        dy = np.divide(np.diff(y), np.diff(x))
-                        ddy = np.divide(np.diff(dy), np.diff(x[:-1]))
-
                         # Plot function
                         b.fig['data'][i + j*len(dfs) + j]['x'] = dfs[i].index.values
                         b.fig['data'][i + j*len(dfs) + j]['y'] = dfs[i][dfs[i]. columns[number_motors + j]].values
-                        # b.fig['data'][i + j*len(dfs) + j]['x'] = x
-                        # b.fig['data'][i + j*len(dfs) + j]['y'] = y
 
                         # Plot First Diff function
                         b.fig['data'][i + 1 + j*len(dfs) + j]['x'] = diff_df.index.values
                         b.fig['data'][i + 1 + j*len(dfs) + j]['y'] = (diff_df[diff_df.columns[number_motors + j]] / diff_df[0]).values
-                        # b.fig['data'][i + 1 + j*len(dfs) + j]['x'] = x
-                        # b.fig['data'][i + 1 + j*len(dfs) + j]['y'] = dy
 
                         # Plot Second Diff function
                         b.fig['data'][i + 2 + j*len(dfs) + j]['x'] = diff_diff_df.index.values
                         b.fig['data'][i + 2 + j*len(dfs) + j]['y'] = (diff_diff_df[diff_diff_df.columns[number_motors + j]] / diff_df[0]).values
-                        # b.fig['data'][i + 2 + j*len(dfs) + j]['x'] = x[:-1]
-                        # b.fig['data'][i + 2 + j*len(dfs) + j]['y'] = ddy
 
             except Exception as e:
                 logprint("Error in trying to plot energy scan", "[ERROR]", config=b.config)
