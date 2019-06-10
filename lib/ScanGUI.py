@@ -1,29 +1,36 @@
-import json
 import os
-import threading
-import IPython
-from IPython.display import display, update_display, Image
-import ipywidgets as widgets
-import time
-import pandas as pd
-import subprocess
-from .utils import logprint
 from pathlib import Path
-from .ScanParser import ScanParser
+import subprocess
+import threading
+import time
+
+# JSON and Pandas
+import json
+import pandas as pd
+
+# Widgets
+import ipywidgets as widgets
+import IPython
+
+# Plotly
 import plotly.graph_objs as go
 from plotly import tools
 
+# Jupy4Syn
+from .utils import logprint
+from .Configuration import Configuration
+from .ScanParser import ScanParser
 
-class MonitorScanSave(widgets.Button):
+class ScanGUI(widgets.Button):
     
-    def __init__(self, config, *args, **kwargs):
+    def __init__(self, config=Configuration(), *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config
         self.config = config     
         self.plots_list = config.plots_list
         
-        # class Button values for MonitorScanSave
+        # class Button values for ScanGUI
         self.description='Start Scanning Plot'
         self.disabled=False
         self.button_style='success'
@@ -555,7 +562,7 @@ class MonitorScanSave(widgets.Button):
         IPython.display.update_display("", display_id='img')
     
     def display(self):
-        display(self.select_plot_option,
+        IPython.display.display(self.select_plot_option,
                 self.start_button, self.refresh_icon_box, self.fig_box, self.output)
         
         IPython.display.display((""), display_id='img')

@@ -3,6 +3,13 @@ from IPython.display import display
 
 class Configuration():
     def __init__(self):
+        """
+        The Configuration class provides runtime information for the Jupy4Syn classes.
+        Such information are:
+        - Printing log in the output cell
+        - Notebook's name
+        - Plot information
+        """
         self.checkbox_logprint_in_cell = widgets.Checkbox(
             value=False,
             description="Print log in Notebook's cells",
@@ -25,4 +32,5 @@ class Configuration():
 
     def display(self):
         display(self.checkbox_logprint_in_cell,
-                widgets.HBox([widgets.Label("Notebook's name: "), self.notebook_name]), self.output)
+                widgets.HBox([widgets.Label("Notebook's name: "), self.notebook_name]),
+                self.output)

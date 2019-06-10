@@ -1,20 +1,23 @@
+# Widgets
 import ipywidgets as widgets
 from IPython.display import display
-import time
-import subprocess
-from .utils import logprint, configurate_motor
-from epics import PV
+
+# EPICS and Py4Syn
+from epics import PV, caget
+
+# Jupy4Syn
+from .utils import logprint
+from .Configuration import Configuration
 
 
 class PVMonitor(widgets.Button):
-    
-    def __init__(self, config, *args, **kwargs):
+    def __init__(self, config=Configuration(), *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config
         self.config = config
         
-        # Text box to write the motors
+        # Text box to write the PV's
         self.text = widgets.Textarea(
             value='',
             placeholder='Example: IOC:m1.DMOV IOC:m3.RBV LNLS:ANEL:corrente.VAL',
@@ -30,11 +33,9 @@ class PVMonitor(widgets.Button):
         self.icon=''
         self.layout = widgets.Layout(width='300px')
         
-        # Boxes
-        self.pv_values = {}
-        
         # PVs
         self.pv_list = []
+        self.pv_values = {}
         
         # Set callback function for click event
         self.monitoring_status = False
