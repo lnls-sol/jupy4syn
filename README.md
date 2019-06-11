@@ -3,7 +3,7 @@ This repository contains the Jupy4Syn library, which provides custom Jupyter Not
 
 ## Requirements
 In order to use Jupy4Syn, the following libraries must be installed:
-* PyEPICS
+* PyEpics
 * Py4Syn
 * Jupyter
 * ipywidgets
