@@ -1,13 +1,18 @@
-import ipywidgets as widgets
-from IPython.display import display
 import time
 import subprocess
+
+# Widgets
+import ipywidgets as widgets
+from IPython.display import display
+
+# Jupy4Syn
+from .Configuration import Configuration
 from .utils import logprint
 
 
 class ScalerButton(widgets.Button):
     
-    def __init__(self, config, *args, **kwargs):
+    def __init__(self, config=Configuration(), *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config
@@ -53,8 +58,7 @@ class ScalerButton(widgets.Button):
 
             try:
                 logprint("Starting Scaler", config=b.config)
-                subprocess.Popen(["pydm -m \"" + b.macro.value + "\" /usr/local/SOL/GUI/Scaler_GUI/scaler.py"],
-                                 shell=True)
+                subprocess.Popen(["scaler", b.macro.value], shell=True)
 
                 logprint("Finished openning Scaler", config=b.config)
             except Exception as e:
