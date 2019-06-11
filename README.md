@@ -23,12 +23,15 @@ It's recommended to use the jupyter Docker image provided by SOL. This image con
  Using these interfaces is quite simple, just create an object of the class you wish and call the display method.
 
 Example:
+
 ```
 from jupy4syn.PVSetter import PVSetter
 
 motor1_setter = PVSetter("LNLS:motor1")
 motor1_setter.display()
 ```
+
+![Example in Jupyter cell](files/img/example.png)
 
 For a complete list of widgets provided by the Jupy4Syn library and its especifics behavior, go to the Docs.
 

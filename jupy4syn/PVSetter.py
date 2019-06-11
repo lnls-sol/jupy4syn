@@ -81,6 +81,6 @@ class PVSetter(widgets.Button):
             b.button_style = 'success'
         
     def display(self):
-        display(widgets.HBox([self.bounded_text, self],
-                self.output)
+        display(widgets.HBox([self.bounded_text, self]),
+                self.output
         )
