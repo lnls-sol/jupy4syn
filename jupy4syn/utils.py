@@ -1,9 +1,15 @@
+from pathlib import Path
+import time
+
+# Widgets
 import ipywidgets as widgets
 from IPython.display import display
-import time
-from pathlib import Path
-from py4syn.epics.MotorClass import Motor
+
+# Py4Syn
 import py4syn
+from py4syn.epics.MotorClass import Motor
+
+# Jupy4Syn
 from .Configuration import Configuration
 
 

@@ -1,4 +1,7 @@
+# Plotly
 import plotly.graph_objs as go
+
+# Jupy4Syn
 import py4syn.utils.scan as sc
 
 

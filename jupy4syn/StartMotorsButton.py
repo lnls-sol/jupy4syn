@@ -1,14 +1,21 @@
+import time
+
+# Widgets
 import ipywidgets as widgets
 from IPython.display import display
-import time
+
+# Py4Syn
 from py4syn.epics.MotorClass import Motor
-from .utils import logprint, configurate_motor
+
+# Jupy4Syn
+from .Configuration import Configuration
 from .MotorSetValueButton import MotorSetValueButton
+from .utils import logprint, configurate_motor
 
 
 class StartMotorsButton(widgets.Button):
     
-    def __init__(self, config, *args, **kwargs):
+    def __init__(self, config=Configuration(), *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config
