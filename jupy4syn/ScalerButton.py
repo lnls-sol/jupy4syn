@@ -58,7 +58,7 @@ class ScalerButton(widgets.Button):
 
             try:
                 logprint("Starting Scaler", config=b.config)
-                subprocess.Popen(["scaler", b.macro.value], shell=True)
+                subprocess.Popen(["scaler " + b.macro.value], shell=True)
 
                 logprint("Finished openning Scaler", config=b.config)
             except Exception as e:
