@@ -1,13 +1,18 @@
+import subprocess
+import time
+
+# Widgets
 import ipywidgets as widgets
 from IPython.display import display
-import time
-import subprocess
+
+# Jupy4Syn
+from .Configuration import Configuration
 from .utils import logprint
 
 
 class ManualAlignmentButton(widgets.Button):
     
-    def __init__(self, config, *args, **kwargs):
+    def __init__(self, config=Configuration(), *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config

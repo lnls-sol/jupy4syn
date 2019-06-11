@@ -1,15 +1,19 @@
+from pathlib import Path
+import time
+
+# Widgets
 import ipywidgets as widgets
 from IPython.display import display
-import time
-import subprocess
-from .utils import logprint
-from pathlib import Path
+
+# Jupy4Syn
+from .Configuration import Configuration
 from .JupyScan import JupyScan
+from .utils import logprint
 
 
 class ScanButton(widgets.Button):
     
-    def __init__(self, config, *args, **kwargs):
+    def __init__(self, config=Configuration(), *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config

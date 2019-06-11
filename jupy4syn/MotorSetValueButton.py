@@ -1,7 +1,14 @@
+import time
+
+# Widgets
 import ipywidgets as widgets
 from IPython.display import display
-import time
+
+# Py4Syn
 import py4syn.epics.MotorClass
+
+# Jupy4Syn
+from .Configuration import Configuration
 from .utils import logprint
 
 
@@ -9,7 +16,7 @@ from .utils import logprint
 # This class connects the button to the bouded float value and set the motor position
 class MotorSetValueButton(widgets.Button):
     
-    def __init__(self, motor, config, *args, **kwargs):
+    def __init__(self, motor, config=Configuration(), *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config
