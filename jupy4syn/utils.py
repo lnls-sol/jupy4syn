@@ -10,7 +10,7 @@ import py4syn
 from py4syn.epics.MotorClass import Motor
 
 # Jupy4Syn
-from .Configuration import Configuration
+from jupy4syn.Configuration import Configuration
 
 
 # Logging function that write log information in a file and also in the notebook output cells (if this config is set True)

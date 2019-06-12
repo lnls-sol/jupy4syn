@@ -6,9 +6,9 @@ import ipywidgets as widgets
 from IPython.display import display
 
 # Jupy4Syn
-from .Configuration import Configuration
-from .JupyScan import JupyScan
-from .utils import logprint
+from jupy4syn.Configuration import Configuration
+from jupy4syn.JupyScan import JupyScan
+from jupy4syn.utils import logprint
 
 
 class ScanButton(widgets.Button):

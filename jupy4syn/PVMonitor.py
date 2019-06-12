@@ -6,12 +6,18 @@ from IPython.display import display
 from epics import PV, caget
 
 # Jupy4Syn
-from .utils import logprint
-from .Configuration import Configuration
+from jupy4syn.utils import logprint
+from jupy4syn.Configuration import Configuration
 
 
 class PVMonitor(widgets.Button):
     def __init__(self, config=Configuration(), *args, **kwargs):
+        """ The PVMonitor uses Jupyter button widgets to monitore PV values
+        
+        Keyword Arguments:
+            config {[Configuration]} -- Configuration object that contains Jupyter Notebook runtime information
+            (default: {Configuration()})
+        """
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config

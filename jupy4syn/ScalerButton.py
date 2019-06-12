@@ -6,8 +6,8 @@ import ipywidgets as widgets
 from IPython.display import display
 
 # Jupy4Syn
-from .Configuration import Configuration
-from .utils import logprint
+from jupy4syn.Configuration import Configuration
+from jupy4syn.utils import logprint
 
 
 class ScalerButton(widgets.Button):

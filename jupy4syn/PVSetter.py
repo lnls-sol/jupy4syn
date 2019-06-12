@@ -6,8 +6,8 @@ from IPython.display import display
 from epics import PV, caget
 
 # Jupy4Syn
-from .utils import logprint
-from .Configuration import Configuration
+from jupy4syn.utils import logprint
+from jupy4syn.Configuration import Configuration
 
 
 class PVSetter(widgets.Button):

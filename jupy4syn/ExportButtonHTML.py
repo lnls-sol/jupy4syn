@@ -6,7 +6,7 @@ import ipywidgets as widgets
 from IPython.display import display, Javascript
 
 # Jupy4Syn
-from .utils import logprint
+from jupy4syn.utils import logprint
 
 
 class ExportButtonHTML(widgets.Button):

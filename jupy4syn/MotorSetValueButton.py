@@ -8,8 +8,8 @@ from IPython.display import display
 import py4syn.epics.MotorClass
 
 # Jupy4Syn
-from .Configuration import Configuration
-from .utils import logprint
+from jupy4syn.Configuration import Configuration
+from jupy4syn.utils import logprint
 
 
 # Class MotorSetValueButton encapsulates a bounded float text with a button to a provided motor

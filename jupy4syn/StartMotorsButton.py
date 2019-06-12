@@ -8,9 +8,9 @@ from IPython.display import display
 from py4syn.epics.MotorClass import Motor
 
 # Jupy4Syn
-from .Configuration import Configuration
-from .MotorSetValueButton import MotorSetValueButton
-from .utils import logprint, configurate_motor
+from jupy4syn.Configuration import Configuration
+from jupy4syn.MotorSetValueButton import MotorSetValueButton
+from jupy4syn.utils import logprint, configurate_motor
 
 
 class StartMotorsButton(widgets.Button):

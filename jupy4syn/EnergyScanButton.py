@@ -16,8 +16,8 @@ import plotly.graph_objs as go
 from plotly import tools
 
 # Jupy4Syn
-from .JupyScan import JupyScan
-from .utils import logprint
+from jupy4syn.JupyScan import JupyScan
+from jupy4syn.utils import logprint
 
 
 class EnergyScanButton(widgets.Button):

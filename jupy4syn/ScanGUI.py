@@ -488,7 +488,7 @@ class ScanGUI(widgets.Button):
     def thread_refresh_icon(self):
         self.refresh_icon_box.layout = widgets.Layout(width='40px', height='40px')
         
-        file = open(".img/refresh_00.png", "rb")
+        file = open("../files/img/refresh_00.png", "rb")
         image = file.read()
         img_w = widgets.Image(
             value=image,
@@ -504,7 +504,7 @@ class ScanGUI(widgets.Button):
         while self.started_scan:
             time.sleep(0.1)
             i += 1
-            file = open(".img/refresh_" + str(i).zfill(2) + ".png", "rb")
+            file = open("../files/img/refresh_" + str(i).zfill(2) + ".png", "rb")
             image = file.read()
             img_w .value = image
             if i == 11:
@@ -512,17 +512,17 @@ class ScanGUI(widgets.Button):
             f += 1
         
         # Ended scan, blank the resfresh image
-        file = open(".img/tick.png", "rb")
+        file = open("../files/img/tick.png", "rb")
         image = file.read()
         img_w .value = image
 
         if self.interrupted_scan:
-            file = open(".img/close.png", "rb")
+            file = open("../files/img/close.png", "rb")
             image = file.read()
             img_w .value = image
         
     def clean_refresh_icon(self):
-        file = open(".img/blank.png", "rb")
+        file = open("../files/img/blank.png", "rb")
         image = file.read()
         img_w = widgets.Image(
             value=image,
