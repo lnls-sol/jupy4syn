@@ -12,12 +12,22 @@ from jupy4syn.Configuration import Configuration
 
 class PVMonitor(widgets.Button):
     def __init__(self, config=Configuration(), *args, **kwargs):
-        """ The PVMonitor uses Jupyter button widgets to monitore PV values
-        
-        Keyword Arguments:
-            config {[Configuration]} -- Configuration object that contains Jupyter Notebook runtime information
-            (default: {Configuration()})
         """
+        **Constructor**
+
+        Parameters
+        ----------
+        config: `jupy4syn.Configuration`, optional
+            Configuration object that contains Jupyter Notebook runtime information, by default Configuration()
+
+        Examples
+        --------
+        >>> config = Configuration()
+        >>> config.display()
+        >>> monitor = PVMonitor(config)
+        >>> monitor.display()
+        """
+        
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config

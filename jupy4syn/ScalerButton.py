@@ -13,6 +13,22 @@ from jupy4syn.utils import logprint
 class ScalerButton(widgets.Button):
     
     def __init__(self, config=Configuration(), *args, **kwargs):
+        """
+        **Constructor**
+
+        Parameters
+        ----------
+        config: `jupy4syn.Configuration`, optional
+            Configuration object that contains Jupyter Notebook runtime information, by default Configuration()
+
+        Examples
+        ----------
+        >>> config = Configuration()
+        >>> config.display()
+        >>> scaler = ScalerButton(config)
+        >>> scaler.display()
+        """
+
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config

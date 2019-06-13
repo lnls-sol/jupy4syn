@@ -1,0 +1,4 @@
+**Version 0.1.0b:**
+
+- Release Date: 2019-06-13
+    - Beta Version Released

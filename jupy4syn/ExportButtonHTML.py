@@ -11,6 +11,22 @@ from jupy4syn.utils import logprint
 
 class ExportButtonHTML(widgets.Button):
     def __init__(self, config, *args, **kwargs):
+        """
+        **Constructor**
+        
+        Parameters
+        ----------
+        config: `jupy4syn.Configuration`, optional
+            Configuration object that contains Jupyter Notebook runtime information, by default Configuration()
+
+        Examples
+        --------
+        >>> config = Configuration()
+            config.display()
+
+        >>> html_export = ExportButtonHTML(config)
+            html_export.display()
+        """
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config

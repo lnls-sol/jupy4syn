@@ -17,3 +17,7 @@ exports/*
 __pycache__/
 *.pyc
 core
+
+# Documentation source
+docs/source
+docs/Makefile

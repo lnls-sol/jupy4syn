@@ -12,18 +12,22 @@ from jupy4syn.Configuration import Configuration
 
 class PVSetter(widgets.Button):
     def __init__(self, pv_name, config=Configuration(), *args, **kwargs):
-        """ The PVSetter uses Jupyter button widgets to set PV values
+        """
+        **Constructor**
 
-        The PVSetter class provides an ipywidgets interface to help changing and PV value
-        using a Jupyter Notebook. It shows a text box that is used to get the value to be
-        set in the PV and a button to change the PV value to the value written in the text box.
-
-        Arguments:
-            pv_name {[str]} -- Name of the PV to be set a value
+        Parameters
+        ----------
+        pv_name: `string`
+            Name of the PV to be set a value
+        config: `jupy4syn.Configuration`, optional
+            Configuration object that contains Jupyter Notebook runtime information, by default Configuration()
         
-        Keyword Arguments:
-            config {[Configuration]} -- Configuration object that contains Jupyter Notebook runtime information
-            (default: {Configuration()})
+        Examples
+        --------
+        >>> config = Configuration()
+        >>> config.display()
+        >>> pv_setter = PVSetter(config)
+        >>> pv_setter.display()
         """
         widgets.Button.__init__(self, *args, **kwargs)
         
