@@ -11,14 +11,15 @@ from jupy4syn.Configuration import Configuration
 
 
 class PVSetter(widgets.Button):
-    def __init__(self, pv_name, config=Configuration(), *args, **kwargs):
+    def __init__(self, name, config=Configuration(), *args, **kwargs):
         """
         **Constructor**
 
         Parameters
         ----------
-        pv_name: `string`
-            Name of the PV to be set a value
+        name: `string`
+            Name of the PV (e.g. "IOC:m1") to be set a value, or name of the mnemonic defined in 
+            config.yml (e.g. "solm1") to be set a value
         config: `jupy4syn.Configuration`, optional
             Configuration object that contains Jupyter Notebook runtime information, by default Configuration()
         
@@ -35,9 +36,30 @@ class PVSetter(widgets.Button):
         self.config = config
         
         # PV associated to the button
-        self.pv = PV(pv_name)
-        self.pv_desc = caget(pv_name + ".DESC")
-        self.pv_name = pv_name
+        self.pv = PV(name)
+
+        # Check if name is a PV, if not search it in config.yml motors
+        if not self.pv.connect():
+            if name in config.yml_motors:
+                try:
+                    self.pv = PV(config.yml_motors[name]['pv'])
+                except KeyError:
+                    raise ValueError('Motor %s doesn\'t have pv field' % name)
+            elif name in config.yml_counters:
+                try:
+                    self.pv = PV(config.yml_counters[name]['pv'])
+                except KeyError:
+                    raise ValueError('Counter %s doesn\'t have pv field' % name)
+            else:
+                raise ValueError("Invalid name. Name provided is neither a conencted PV neither a config.yml mnemonic")
+
+            # Check if PV is finally connected
+            if not self.pv.connect:
+                raise Exception("Valid name, but PV connection not possible")
+
+
+        self.pv_desc = caget(self.pv.pvname + ".DESC")
+        self.pv_name = self.pv.pvname
         
         # Bounded float text associated to the button
         self.bounded_text = widgets.Text(

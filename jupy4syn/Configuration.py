@@ -2,6 +2,9 @@
 import ipywidgets as widgets
 from IPython.display import display
 
+# scan-utils
+import scan_utils.configuration as scan_utils
+
 class Configuration():
     def __init__(self):
         """
@@ -30,6 +33,9 @@ class Configuration():
         self.plots_list = []
 
         self.output = widgets.Output()
+
+        self.yml_motors = scan_utils.Configuration()['motors']
+        self.yml_counters = scan_utils.Configuration()['counters']
 
     def display(self):
         display(self.checkbox_logprint_in_cell,
