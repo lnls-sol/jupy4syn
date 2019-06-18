@@ -10,7 +10,7 @@ from jupy4syn.Configuration import Configuration
 from jupy4syn.utils import logprint
 
 
-class ManualAlignmentButton(widgets.Button):
+class SlitsButton(widgets.Button):
     
     def __init__(self, config=Configuration(), *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
@@ -19,7 +19,7 @@ class ManualAlignmentButton(widgets.Button):
         self.config = config
         
         # class Button values for MonitorScanSave
-        self.description = 'Start Manual Alignment'
+        self.description = 'Open Slits Interface'
         self.disabled = False
         self.button_style = 'success'
         self.tooltip = 'Click me'
@@ -45,18 +45,17 @@ class ManualAlignmentButton(widgets.Button):
             # Change button to a "clicked status"
             b.disabled = True
             b.button_style = ''
-            b.description='Aligning...'
+            b.description='Opening Interface...'
 
             # Create a subprocess with the slits script from sol-widgets
             try:
-                logprint("Starting manual alignment", config=b.config)
-                subprocess.Popen(["/usr/local/SOL/GUI/sol-widgets/examples/motor/slits"],
-                                 shell=True)
+                logprint("Opening slits interface", config=b.config)
+                subprocess.Popen(["slits"], shell=True)
 
-                logprint("Finished manual alignment", config=b.config)
+                logprint("Finished opening slits interface", config=b.config)
             except Exception as e:
                 # If any error occurs, log that but dont stop code exection
-                logprint("Error in manual alignment", "[ERROR]", config=b.config)
+                logprint("Error in opening slits interface", "[ERROR]", config=b.config)
                 logprint(str(e), "[ERROR]", config=b.config)
 
             # We should sleep for some time to give some responsiveness to the user
@@ -65,7 +64,7 @@ class ManualAlignmentButton(widgets.Button):
             # Reenable button
             b.disabled = False
             b.button_style = 'success'
-            b.description='Start Manual Alignment'
+            b.description = 'Open Slits Interface'
     
     def display(self):
         display(self.display_box)
