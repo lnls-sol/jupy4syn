@@ -68,7 +68,7 @@ class moveButton(widgets.Button):
         b.output_1.clear_output()
         b.output_2.clear_output()
         
-        # with statement to output logs in stdou (if this option is enabled)
+        # With statement to output logs in Jupyter stdout (if this option is enabled)
         # Change button to a "clicked status"
         b.disabled = True
         b.button_style = ''

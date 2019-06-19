@@ -5,18 +5,28 @@ import time
 import ipywidgets as widgets
 from IPython.display import display
 
+# scan-utils
+import scan_utils.configuration as scan_utils
+
 # Jupy4Syn
 from jupy4syn.Configuration import Configuration
 from jupy4syn.utils import logprint
 
 
-class SlitsButton(widgets.Button):
+class slitsButton(widgets.Button):
     
-    def __init__(self, config=Configuration(), *args, **kwargs):
+    def __init__(self, left, right, top, bottom, config=Configuration(), *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config
         self.config = config
+        self.yml_config = scan_utils.Configuration()
+
+        # Motors
+        self.left = self.get_pv_by_name(left)
+        self.right = self.get_pv_by_name(right)
+        self.top = self.get_pv_by_name(top)
+        self.bottom = self.get_pv_by_name(bottom)
         
         # class Button values for MonitorScanSave
         self.description = 'Open Slits Interface'
@@ -50,7 +60,7 @@ class SlitsButton(widgets.Button):
             # Create a subprocess with the slits script from sol-widgets
             try:
                 logprint("Opening slits interface", config=b.config)
-                subprocess.Popen(["slits"], shell=True)
+                subprocess.Popen(["slits", b.left, b.right, b.top, b.bottom], shell=True)
 
                 logprint("Finished opening slits interface", config=b.config)
             except Exception as e:
@@ -66,5 +76,13 @@ class SlitsButton(widgets.Button):
             b.button_style = 'success'
             b.description = 'Open Slits Interface'
     
+    def get_pv_by_name(self, name):
+        motors = self.yml_config['motors']
+
+        if name in motors:
+            return motors[name]['pv']
+        else: 
+            return ""
+
     def display(self):
         display(self.display_box)
