@@ -13,7 +13,7 @@ from jupy4syn.Configuration import Configuration
 from jupy4syn.utils import logprint
 
 
-class slitsButton(widgets.Button):
+class motorsButton(widgets.Button):
     
     def __init__(self, m1="", m2="", m3="", m4="", m5="", user_flag=False, config=Configuration(), *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
