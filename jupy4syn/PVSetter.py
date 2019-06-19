@@ -1,3 +1,5 @@
+import time
+
 # Widgets
 import ipywidgets as widgets
 from IPython.display import display
@@ -39,7 +41,7 @@ class PVSetter(widgets.Button):
         self.pv = PV(name)
 
         # Check if name is a PV, if not search it in config.yml motors
-        if not self.pv.connect():
+        if not self.pv.wait_for_connection():
             if name in config.yml_motors:
                 try:
                     self.pv = PV(config.yml_motors[name]['pv'])
@@ -54,7 +56,7 @@ class PVSetter(widgets.Button):
                 raise ValueError("Invalid name. Name provided is neither a conencted PV neither a config.yml mnemonic")
 
             # Check if PV is finally connected
-            if not self.pv.connect:
+            if not self.pv.wait_for_connection():
                 raise Exception("Valid name, but PV connection not possible")
 
 
@@ -63,7 +65,7 @@ class PVSetter(widgets.Button):
         
         # Bounded float text associated to the button
         self.bounded_text = widgets.Text(
-                                value=str(self.pv.value),
+                                value=str(self.pv.get(as_string=False)),
                                 description=self.pv_desc,
                                 disabled=False
                               )
@@ -91,6 +93,9 @@ class PVSetter(widgets.Button):
             # Change button to a "clicked status"
             b.disabled = True
             b.button_style = ''
+
+            # We should sleep for some time to give some responsiveness to the user
+            time.sleep(0.5)
 
             logprint("Setting PV " + b.pv_name + " to value " + b.bounded_text.value, config=b.config)
             try:
