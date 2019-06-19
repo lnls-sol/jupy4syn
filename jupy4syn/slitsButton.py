@@ -60,7 +60,7 @@ class slitsButton(widgets.Button):
             # Create a subprocess with the slits script from sol-widgets
             try:
                 logprint("Opening slits interface", config=b.config)
-                subprocess.Popen(["slits", b.left, b.right, b.top, b.bottom], shell=True)
+                subprocess.Popen(["slits", b.left, b.right, b.top, b.bottom])
 
                 logprint("Finished opening slits interface", config=b.config)
             except Exception as e:

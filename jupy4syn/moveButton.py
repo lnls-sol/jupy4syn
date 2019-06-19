@@ -53,8 +53,7 @@ class moveButton(widgets.Button):
                               )
                
         # Logging
-        self.output_1 = widgets.Output()
-        self.output_2 = widgets.Output()
+        self.output = widgets.Output()
         
         # Set callback function for click event
         self.on_click(self._start_button)
@@ -65,35 +64,35 @@ class moveButton(widgets.Button):
     @staticmethod
     def _start_button(b):
         # Clear previous logs outputs
-        b.output_1.clear_output()
-        b.output_2.clear_output()
+        b.output.clear_output()
         
         # With statement to output logs in Jupyter stdout (if this option is enabled)
-        # Change button to a "clicked status"
-        b.disabled = True
-        b.button_style = ''
-        b.description='Executing...'
+        with b.output:
+            # Change button to a "clicked status"
+            b.disabled = True
+            b.button_style = ''
+            b.description='Executing...'
 
-        try:
-            logprint("Executing move", config=b.config)
-            # TODO: call move main from another thread
-            move.main(b.bounded_text.value.split(), b.output_1, b.output_2)
+            try:
+                logprint("Executing move", config=b.config)
+                # TODO: call move main from another thread
+                move.main(b.bounded_text.value.split())
 
-            logprint("Finished executing move", config=b.config)
-        except SystemExit as e:
-            pass
-        except Exception as e:
-            # If any error occurs, log that but dont stop code exection
-            logprint("Error in executing move", "[ERROR]", config=b.config)
-            logprint(str(e), "[ERROR]", config=b.config)
+                logprint("Finished executing move", config=b.config)
+            except SystemExit as e:
+                pass
+            except Exception as e:
+                # If any error occurs, log that but dont stop code exection
+                logprint("Error in executing move", "[ERROR]", config=b.config)
+                logprint(str(e), "[ERROR]", config=b.config)
 
-        # We should sleep for some time to give some responsiveness to the user
-        time.sleep(1.0)
+            # We should sleep for some time to give some responsiveness to the user
+            time.sleep(1.0)
 
-        # Change button layout monitoring
-        b.disabled = False
-        b.button_style = 'success'
-        b.description = 'Execute move'
+            # Change button layout monitoring
+            b.disabled = False
+            b.button_style = 'success'
+            b.description = 'Execute move'
     
     def display(self):
-        display(self.bounded_text, self.start_button, self.output_1, self.output_2)
+        display(self.bounded_text, self.start_button, self.output)

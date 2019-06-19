@@ -29,7 +29,7 @@ class motorsButton(widgets.Button):
         self.m4 = self.get_pv_by_name(m4)
         self.m5 = self.get_pv_by_name(m5)
 
-        self.motors = [m1, m2, m3, m4, m5]
+        self.motors = [self.m1, self.m2, self.m3, self.m4, self.m5]
         self.motors = [motor for motor in self.motors if motor != ""]
 
         # Flags
@@ -67,7 +67,7 @@ class motorsButton(widgets.Button):
             # Create a subprocess with the motors script from sol-widgets
             try:
                 logprint("Opening motors interface", config=b.config)
-                subprocess.Popen(["motors_gui"] + b.motors + [b.user_flag], shell=True)
+                subprocess.Popen(["motors_gui"] + b.motors + [b.user_flag])
 
                 logprint("Finished opening motors interface", config=b.config)
             except Exception as e:
