@@ -74,12 +74,12 @@ class CommandButton(widgets.Button):
                 logprint("Executing command", config=b.config)
                 process = subprocess.Popen([b.command], stdout=subprocess.PIPE, universal_newlines=True)
                 
-                while True:
-                    output = process.stdout.readline()
-                    if output == '' and process.poll() is not None:
-                        break
-                    if output:
-                        print(output.strip())
+                # while True:
+                #     output = process.stdout.readline()
+                #     if output == '' and process.poll() is not None:
+                #         break
+                #     if output:
+                #         print(output.strip())
 
                 logprint("Finished executing command", config=b.config)
             except Exception as e:
@@ -93,7 +93,7 @@ class CommandButton(widgets.Button):
             # Change button layout monitoring
             b.disabled = False
             b.button_style = 'success'
-            b.description = 'Execute Command ' + '"' + self.command + '"'
+            b.description = 'Execute Command ' + '"' + b.command + '"'
     
     def display(self):
         display(self.start_button, self.output)
