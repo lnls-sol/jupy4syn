@@ -19,10 +19,10 @@ class PVSetter(widgets.Button):
 
         Parameters
         ----------
-        name: `string`
+        name : :obj:`str`
             Name of the PV (e.g. "IOC:m1") to be set a value, or name of the mnemonic defined in 
             config.yml (e.g. "solm1") to be set a value
-        config: `jupy4syn.Configuration`, optional
+        config : :py:class:`Configuration <jupy4syn.Configuration.Configuration>`, optional
             Configuration object that contains Jupyter Notebook runtime information, by default Configuration()
         
         Examples

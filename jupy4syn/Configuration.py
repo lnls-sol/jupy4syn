@@ -38,6 +38,9 @@ class Configuration():
         self.yml_counters = scan_utils.Configuration()['counters']
 
     def display(self):
+        """
+        Display method
+        """
         display(self.checkbox_logprint_in_cell,
                 widgets.HBox([widgets.Label("Notebook's name: "), self.notebook_name]),
                 self.output)
