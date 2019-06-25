@@ -1,3 +1,5 @@
+import time
+
 # Widgets
 import ipywidgets as widgets
 from IPython.display import display
@@ -63,6 +65,7 @@ class PVGetter(widgets.Button):
         self.pv_name = self.pv.pvname
 
         self.value = ""
+        self.value_text = widgets.Label(self.value)
         
         # class Button values for PVSetter
         self.description = 'Get "' + self.pv_desc + '" value'
@@ -88,12 +91,15 @@ class PVGetter(widgets.Button):
             b.disabled = True
             b.button_style = ''
 
+            # We should sleep for some time to give some responsiveness to the user
+            time.sleep(0.5)
+
             logprint("Getting PV " + b.pv_name + " value", config=b.config)
             try:
                 # Move the motor to target absolute position
                 b.value = b.pv.get()
-                b.value = "Value of " + b.name + " is: " + str(b.value)
-                logprint("Get value " + b.bounded_text.value + " of PV " + b.pv_name, config=b.config)
+                b.value_text.value = "Value of " + b.name + " is " + str(b.value)
+                logprint("Get value of PV " + b.pv_name, config=b.config)
             except Exception as e:
                 # If any error occurs, log that but dont stop code exection
                 logprint("Error in Getting value " + b.bounded_text.value + " of PV " + b.pv_name, "[ERROR]", config=b.config)
@@ -105,6 +111,6 @@ class PVGetter(widgets.Button):
         
     def display(self):
         display(self,
-                widgets.Label(self.value),
+                self.value_text,
                 self.output
         )

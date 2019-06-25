@@ -15,7 +15,7 @@ from jupy4syn.utils import logprint
 
 class wmButton(widgets.Button):
     
-    def __init__(self, config=Configuration(), *args, **kwargs):
+    def __init__(self, motor="<motor>", config=Configuration(), *args, **kwargs):
         """
         **Constructor**
 
@@ -36,6 +36,9 @@ class wmButton(widgets.Button):
         
         # Config
         self.config = config
+
+        # Motor
+        self.motor = motor
         
         # class Button values for MonitorScanSave
         self.description = 'Execute wm'
@@ -47,7 +50,7 @@ class wmButton(widgets.Button):
 
         # Bounded float text associated to the button
         self.bounded_text = widgets.Text(
-                                value="",
+                                value=self.motor,
                                 description="arguments",
                                 disabled=False
                               )

@@ -62,16 +62,20 @@ class PVSetter(widgets.Button):
 
         self.pv_desc = caget(self.pv.pvname + ".DESC")
         self.pv_name = self.pv.pvname
+
+        # If PV is an enum, when its value is get, we get it with "as_string" set to True, so we get
+        # the enum string value, not the enum int value
+        self.pv_is_enum = True if self.pv.type == "enum" or self.pv.type == "time_enum" else False
         
         # Bounded float text associated to the button
         self.bounded_text = widgets.Text(
-                                value=str(self.pv.get(as_string=False)),
-                                description=self.pv_desc,
+                                value=str(self.pv.get(as_string=self.pv_is_enum)),
                                 disabled=False
                               )
+        self.label = widgets.Label(self.pv_desc + ": ")
         
         # class Button values for PVSetter
-        self.description = 'Set "' + self.pv_desc + '" value'
+        self.description = 'Set value'
         self.disabled = False
         self.button_style = 'success'
         self.tooltip = 'Click me'
@@ -112,6 +116,6 @@ class PVSetter(widgets.Button):
             b.button_style = 'success'
         
     def display(self):
-        display(widgets.HBox([self.bounded_text, self]),
+        display(widgets.HBox([self.label, self.bounded_text, self]),
                 self.output
         )

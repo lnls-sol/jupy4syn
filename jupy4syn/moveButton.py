@@ -15,7 +15,7 @@ from jupy4syn.utils import logprint
 
 class moveButton(widgets.Button):
     
-    def __init__(self, config=Configuration(), *args, **kwargs):
+    def __init__(self, motor="<motor>", config=Configuration(), *args, **kwargs):
         """
         **Constructor**
 
@@ -47,7 +47,7 @@ class moveButton(widgets.Button):
 
         # Bounded float text associated to the button
         self.bounded_text = widgets.Text(
-                                value="",
+                                value=motor + " <value>",
                                 description="arguments",
                                 disabled=False
                               )
