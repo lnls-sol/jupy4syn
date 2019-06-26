@@ -42,7 +42,7 @@ class PVGetter(widgets.Button):
         self.name = name
 
         # Check if name is a PV, if not search it in config.yml motors
-        if not self.pv.connect():
+        if not self.pv.wait_for_connection():
             if name in config.yml_motors:
                 try:
                     self.pv = PV(config.yml_motors[name]['pv'])
@@ -57,7 +57,7 @@ class PVGetter(widgets.Button):
                 raise ValueError("Invalid name. Name provided is neither a conencted PV neither a config.yml mnemonic")
 
             # Check if PV is finally connected
-            if not self.pv.connect:
+            if not self.pv.wait_for_connection():
                 raise Exception("Valid name, but PV connection not possible")
 
 

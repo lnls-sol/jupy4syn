@@ -13,6 +13,8 @@ from jupy4syn.commands.scanCommand import scanCommand
 from jupy4syn.commands.scalerCommand import scalerCommand
 from jupy4syn.commands.vortexCommand import vortexCommand
 from jupy4syn.commands.pymcaCommand import pymcaCommand
+from jupy4syn.commands.putCommand import putCommand
+from jupy4syn.commands.getCommand import getCommand
 
 
 class commandDict():
@@ -48,7 +50,9 @@ class commandDict():
             "scan_gui": scanCommand(),
             "energy_scan_gui": energyscanCommand(),
             "vortex": vortexCommand(),
-            "pymca": pymcaCommand()
+            "pymca": pymcaCommand(),
+            "put": putCommand(config),
+            "get": getCommand(config)
         }
 
     def execute(self, command, parameters):
