@@ -5,16 +5,15 @@ import subprocess
 import ipywidgets as widgets
 from IPython.display import display
 
-from scan_utils import ct
-
 # Jupy4Syn
 from jupy4syn.Configuration import Configuration
+from jupy4syn.commandDict import commandDict
 from jupy4syn.utils import logprint
 
 
-class CommandButton(widgets.Button):
+class commandButton(widgets.Button):
     
-    def __init__(self, command, config=Configuration(), *args, **kwargs):
+    def __init__(self, command, default_args="", config=Configuration(), *args, **kwargs):
         """
         **Constructor**
 
@@ -38,8 +37,12 @@ class CommandButton(widgets.Button):
         # Config
         self.config = config
 
-        # Command
+        # Command Dictionary
         self.command = command
+        self.command_dict = commandDict()
+
+        self.text_box_args = self.command_dict.textbox_args(command, default_args)
+        self.show_text_box = self.command_dict.show_text_box(command, default_args)
         
         # class Button values for MonitorScanSave
         self.description = 'Execute Command ' + '"' + self.command + '"'
@@ -48,6 +51,15 @@ class CommandButton(widgets.Button):
         self.tooltip = 'Click me'
         self.icon = ''
         self.layout = widgets.Layout(width='300px')
+
+        # Arguments textbox
+        self.arguments = widgets.Text(
+            value=self.text_box_args,
+            placeholder="Type the arguments",
+            description="",
+            disabled=False,
+            layout=widgets.Layout(width="300px")
+        )
                
         # Logging
         self.output = widgets.Output()
@@ -71,20 +83,21 @@ class CommandButton(widgets.Button):
             b.description='Executing...'
 
             try:
-                logprint("Executing command", config=b.config)
-                process = subprocess.Popen([b.command], stdout=subprocess.PIPE, universal_newlines=True)
+                logprint("Executing command " + b.command, config=b.config)
+        
+                b.command_dict.execute(b.command, b.arguments.value)
                 
-                while True:
-                    output = process.stdout.readline()
-                    if output == '' and process.poll() is not None:
-                        break
-                    if output:
-                        print(output.strip())
+                # while True:
+                #     output = process.stdout.readline()
+                #     if output == '' and process.poll() is not None:
+                #         break
+                #     if output:
+                #         print(output.strip())
 
-                logprint("Finished executing command", config=b.config)
+                logprint("Finished executing command " + b.command, config=b.config)
             except Exception as e:
                 # If any error occurs, log that but dont stop code exection
-                logprint("Error in executing command", "[ERROR]", config=b.config)
+                logprint("Error in executing command " + b.command, "[ERROR]", config=b.config)
                 logprint(str(e), "[ERROR]", config=b.config)
 
             # We should sleep for some time to give some responsiveness to the user
@@ -93,7 +106,17 @@ class CommandButton(widgets.Button):
             # Change button layout monitoring
             b.disabled = False
             b.button_style = 'success'
-            b.description = 'Execute Command ' + '"' + self.command + '"'
+            b.description = 'Execute Command ' + '"' + b.command + '"'
     
     def display(self):
-        display(self.start_button, self.output)
+        # Some commands needs arguments that will be acquired through a text box
+        # For the commands that don't need such arguments, the text box will be omitted
+        if self.show_text_box:
+            display(self.arguments,
+                    self,
+                    self.output
+                )
+        else:
+            display(self,
+                    self.output
+                )

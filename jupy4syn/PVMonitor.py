@@ -17,7 +17,7 @@ class PVMonitor(widgets.Button):
 
         Parameters
         ----------
-        config: `jupy4syn.Configuration`, optional
+        config : :py:class:`Configuration <jupy4syn.Configuration.Configuration>`, optional
             Configuration object that contains Jupyter Notebook runtime information, by default Configuration()
 
         Examples

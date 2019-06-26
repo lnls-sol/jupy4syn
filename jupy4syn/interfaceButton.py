@@ -5,17 +5,14 @@ import subprocess
 import ipywidgets as widgets
 from IPython.display import display
 
-# scan-utils
-from scan_utils import wm
-
 # Jupy4Syn
 from jupy4syn.Configuration import Configuration
 from jupy4syn.utils import logprint
 
 
-class wmButton(widgets.Button):
+class interfaceButton(widgets.Button):
     
-    def __init__(self, motor="<motor>", config=Configuration(), *args, **kwargs):
+    def __init__(self, interface, config=Configuration(), *args, **kwargs):
         """
         **Constructor**
 
@@ -27,9 +24,9 @@ class wmButton(widgets.Button):
         Examples
         ----------
         >>> config = Configuration()
-            config.display()
-        >>> wm = wmButton(config)
-            wm.display()
+        >>> config.display()
+        >>> scaler = interfaceButton(config)
+        >>> scaler.display()
         """
 
         widgets.Button.__init__(self, *args, **kwargs)
@@ -37,23 +34,37 @@ class wmButton(widgets.Button):
         # Config
         self.config = config
 
-        # Motor
-        self.motor = motor
+        # Interfaces
+        self.interface = interface
+
+        self.interfaces_list = ["pydm", "scaler", "vortex", "scan_gui", "energy_scan_gui", "pymca"]
+        if interface not in self.interfaces_list:
+            raise TypeError("Interface '" + interface + "' is not a valid option. Interfaces available are: " +
+                            str(self.interfaces_list))
+        
+        if interface is "energy_scan_gui":
+            macro_value = "energy"
+        else:
+            macro_value = ""
+
+        
         
         # class Button values for MonitorScanSave
-        self.description = 'Execute wm'
+        self.description = 'Start ' + interface
         self.disabled = False
         self.button_style = 'success'
         self.tooltip = 'Click me'
         self.icon = ''
         self.layout = widgets.Layout(width='300px')
 
-        # Bounded float text associated to the button
-        self.bounded_text = widgets.Text(
-                                value=self.motor,
-                                description="arguments",
-                                disabled=False
-                              )
+        # Macro textbox
+        self.macro = widgets.Text(
+            value=macro_value,
+            placeholder="Type the macro",
+            description="",
+            disabled=False,
+            layout=widgets.Layout(width="300px")
+        )
                
         # Logging
         self.output = widgets.Output()
@@ -74,19 +85,23 @@ class wmButton(widgets.Button):
             # Change button to a "clicked status"
             b.disabled = True
             b.button_style = ''
-            b.description='Executing...'
+            b.description='Opening interface...'
 
             try:
-                logprint("Executing wm", config=b.config)
-                # TODO: call wm main from another thread
-                wm.main(b.bounded_text.value.split())
+                logprint("Starting " + b.interface, config=b.config)
 
-                logprint("Finished executing wm", config=b.config)
-            except SystemExit as e:
-                pass
+                if b.macro.value is not "":
+                    if b.interface is not "energy_scan_gui":
+                        subprocess.Popen([b.interface, "-m", b.macro.value])
+                    else:
+                        subprocess.Popen([b.interface, b.macro.value])
+                else:
+                    subprocess.Popen([b.interface])
+
+                logprint("Finished openning " + b.interface, config=b.config)
             except Exception as e:
                 # If any error occurs, log that but dont stop code exection
-                logprint("Error in executing wm", "[ERROR]", config=b.config)
+                logprint("Error in openning " + b.interface, "[ERROR]", config=b.config)
                 logprint(str(e), "[ERROR]", config=b.config)
 
             # We should sleep for some time to give some responsiveness to the user
@@ -95,7 +110,7 @@ class wmButton(widgets.Button):
             # Change button layout monitoring
             b.disabled = False
             b.button_style = 'success'
-            b.description = 'Execute wm'
+            b.description = 'Start ' + b.interface
     
     def display(self):
-        display(self.bounded_text, self.start_button, self.output)
+        display(self.macro, self.start_button, self.output)

@@ -5,21 +5,38 @@ import time
 import ipywidgets as widgets
 from IPython.display import display
 
+# scan-utils
+import scan_utils.configuration as scan_utils
+
 # Jupy4Syn
 from jupy4syn.Configuration import Configuration
 from jupy4syn.utils import logprint
 
 
-class SlitsButton(widgets.Button):
+class motorsButton(widgets.Button):
     
-    def __init__(self, config=Configuration(), *args, **kwargs):
+    def __init__(self, m1="", m2="", m3="", m4="", m5="", user_flag=False, config=Configuration(), *args, **kwargs):
         widgets.Button.__init__(self, *args, **kwargs)
         
         # Config
         self.config = config
+        self.yml_config = scan_utils.Configuration()
+
+        # Motors
+        self.m1 = self.get_pv_by_name(m1)
+        self.m2 = self.get_pv_by_name(m2)
+        self.m3 = self.get_pv_by_name(m3)
+        self.m4 = self.get_pv_by_name(m4)
+        self.m5 = self.get_pv_by_name(m5)
+
+        self.motors = [self.m1, self.m2, self.m3, self.m4, self.m5]
+        self.motors = [motor for motor in self.motors if motor != ""]
+
+        # Flags
+        self.user_flag = "--user" if user_flag is True else ""
         
         # class Button values for MonitorScanSave
-        self.description = 'Open Slits Interface'
+        self.description = 'Open Motors Interface'
         self.disabled = False
         self.button_style = 'success'
         self.tooltip = 'Click me'
@@ -47,15 +64,15 @@ class SlitsButton(widgets.Button):
             b.button_style = ''
             b.description='Opening Interface...'
 
-            # Create a subprocess with the slits script from sol-widgets
+            # Create a subprocess with the motors script from sol-widgets
             try:
-                logprint("Opening slits interface", config=b.config)
-                subprocess.Popen(["slits"], shell=True)
+                logprint("Opening motors interface", config=b.config)
+                subprocess.Popen(["motors_gui"] + b.motors + [b.user_flag])
 
-                logprint("Finished opening slits interface", config=b.config)
+                logprint("Finished opening motors interface", config=b.config)
             except Exception as e:
                 # If any error occurs, log that but dont stop code exection
-                logprint("Error in opening slits interface", "[ERROR]", config=b.config)
+                logprint("Error in opening motors interface", "[ERROR]", config=b.config)
                 logprint(str(e), "[ERROR]", config=b.config)
 
             # We should sleep for some time to give some responsiveness to the user
@@ -64,7 +81,15 @@ class SlitsButton(widgets.Button):
             # Reenable button
             b.disabled = False
             b.button_style = 'success'
-            b.description = 'Open Slits Interface'
+            b.description = 'Open Motors Interface'
     
+    def get_pv_by_name(self, name):
+        motors = self.yml_config['motors']
+
+        if name in motors:
+            return motors[name]['pv']
+        else: 
+            return ""
+
     def display(self):
         display(self.display_box)

@@ -12,7 +12,7 @@ from jupy4syn.utils import logprint
 from jupy4syn.Configuration import Configuration
 
 
-class PVSetter(widgets.Button):
+class PVGetter(widgets.Button):
     def __init__(self, name, config=Configuration(), *args, **kwargs):
         """
         **Constructor**
@@ -20,8 +20,8 @@ class PVSetter(widgets.Button):
         Parameters
         ----------
         name : :obj:`str`
-            Name of the PV (e.g. "IOC:m1") to be set a value, or name of the mnemonic defined in 
-            config.yml (e.g. "solm1") to be set a value
+            Name of the PV (e.g. "IOC:m1") to get a value, or name of the mnemonic defined in 
+            config.yml (e.g. "solm1") to get a value
         config : :py:class:`Configuration <jupy4syn.Configuration.Configuration>`, optional
             Configuration object that contains Jupyter Notebook runtime information, by default Configuration()
         
@@ -29,8 +29,8 @@ class PVSetter(widgets.Button):
         --------
         >>> config = Configuration()
         >>> config.display()
-        >>> pv_setter = PVSetter(config)
-        >>> pv_setter.display()
+        >>> pv_getter = PVGetter(config)
+        >>> pv_getter.display()
         """
         widgets.Button.__init__(self, *args, **kwargs)
         
@@ -39,6 +39,7 @@ class PVSetter(widgets.Button):
         
         # PV associated to the button
         self.pv = PV(name)
+        self.name = name
 
         # Check if name is a PV, if not search it in config.yml motors
         if not self.pv.wait_for_connection():
@@ -63,19 +64,11 @@ class PVSetter(widgets.Button):
         self.pv_desc = caget(self.pv.pvname + ".DESC")
         self.pv_name = self.pv.pvname
 
-        # If PV is an enum, when its value is get, we get it with "as_string" set to True, so we get
-        # the enum string value, not the enum int value
-        self.pv_is_enum = True if self.pv.type == "enum" or self.pv.type == "time_enum" else False
-        
-        # Bounded float text associated to the button
-        self.bounded_text = widgets.Text(
-                                value=str(self.pv.get(as_string=self.pv_is_enum)),
-                                disabled=False
-                              )
-        self.label = widgets.Label(self.pv_desc + ": ")
+        self.value = ""
+        self.value_text = widgets.Label(self.value)
         
         # class Button values for PVSetter
-        self.description = 'Set value'
+        self.description = 'Get "' + self.pv_desc + '" value'
         self.disabled = False
         self.button_style = 'success'
         self.tooltip = 'Click me'
@@ -101,14 +94,15 @@ class PVSetter(widgets.Button):
             # We should sleep for some time to give some responsiveness to the user
             time.sleep(0.5)
 
-            logprint("Setting PV " + b.pv_name + " to value " + b.bounded_text.value, config=b.config)
+            logprint("Getting PV " + b.pv_name + " value", config=b.config)
             try:
                 # Move the motor to target absolute position
-                b.pv.put(b.bounded_text.value, wait=False)
-                logprint("Set value " + b.bounded_text.value + " to PV " + b.pv_name, config=b.config)
+                b.value = b.pv.get()
+                b.value_text.value = "Value of " + b.name + " is " + str(b.value)
+                logprint("Get value of PV " + b.pv_name, config=b.config)
             except Exception as e:
                 # If any error occurs, log that but dont stop code exection
-                logprint("Error in setting value " + b.bounded_text.value + " to PV " + b.pv_name, "[ERROR]", config=b.config)
+                logprint("Error in Getting value " + b.bounded_text.value + " of PV " + b.pv_name, "[ERROR]", config=b.config)
                 logprint(str(e), "[ERROR]", config=b.config)
 
             # Change button layout back to normal
@@ -116,6 +110,7 @@ class PVSetter(widgets.Button):
             b.button_style = 'success'
         
     def display(self):
-        display(widgets.HBox([self.label, self.bounded_text, self]),
+        display(self,
+                self.value_text,
                 self.output
         )
