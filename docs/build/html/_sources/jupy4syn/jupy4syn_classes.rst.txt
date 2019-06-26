@@ -1,0 +1,39 @@
+
+=======
+Widgets
+=======
+
+Available widgets:
+
+.. toctree::
+   :maxdepth: 2
+
+   widgets/jupy4syn_configuration
+   widgets/jupy4syn_pvmonitor
+   widgets/jupy4syn_pvsetter
+   widgets/jupy4syn_pvgetter
+   widgets/jupy4syn_exporthtml
+   widgets/jupy4syn_exportlatex
+   widgets/jupy4syn_scalerbutton
+   widgets/jupy4syn_commandbutton
+
+=============
+Commands List
+=============
+
+Available commands:
+
+.. toctree::
+   :maxdepth: 1
+
+   commands_list/jupy4syn_commands_list
+
+================
+Commands Classes
+================
+
+.. toctree::
+   :maxdepth: 2
+
+   commands/jupy4syn_commands_icommand
+   commands/jupy4syn_commands_wmcommand

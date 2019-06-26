@@ -1,0 +1,8 @@
+Available entities at jupy4syn library:
+
+.. toctree::
+   :maxdepth: 2
+
+   widgets/jupy4syn_widgets
+   commands_list/jupy4syn_commands_list
+   commands/jupy4syn_commands

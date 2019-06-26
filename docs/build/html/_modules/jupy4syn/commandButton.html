@@ -1,0 +1,318 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>jupy4syn.commandButton &mdash; Jupy4Syn</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Jupy4Syn
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0+untagged.95.g1349e21.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Jupy4Syn Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jupy4syn.html">Jupy4Syn module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release_notes.html">Release Notes</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Jupy4Syn</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>jupy4syn.commandButton</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for jupy4syn.commandButton</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="c1"># Widgets</span>
+<span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">widgets</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="k">import</span> <span class="n">display</span>
+
+<span class="c1"># Jupy4Syn</span>
+<span class="kn">from</span> <span class="nn">jupy4syn.Configuration</span> <span class="k">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">jupy4syn.commandDict</span> <span class="k">import</span> <span class="n">commandDict</span>
+<span class="kn">from</span> <span class="nn">jupy4syn.utils</span> <span class="k">import</span> <span class="n">logprint</span>
+
+
+<div class="viewcode-block" id="commandButton"><a class="viewcode-back" href="../../jupy4syn/widgets/jupy4syn_commandbutton.html#jupy4syn.commandButton.commandButton">[docs]</a><span class="k">class</span> <span class="nc">commandButton</span><span class="p">(</span><span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">default_args</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">Configuration</span><span class="p">(),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        **Constructor**</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        command: `string`</span>
+<span class="sd">            Command that will be executed at the button click</span>
+<span class="sd">        config: `jupy4syn.Configuration`, optional</span>
+<span class="sd">            Configuration object that contains Jupyter Notebook runtime information, by default Configuration()</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+<span class="sd">        &gt;&gt;&gt; config = Configuration()</span>
+<span class="sd">            config.display()</span>
+<span class="sd">        &gt;&gt;&gt; command = CommandButton(config)</span>
+<span class="sd">            command.display()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        
+        <span class="c1"># Config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+
+        <span class="c1"># Command Dictionary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">command</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">command_dict</span> <span class="o">=</span> <span class="n">commandDict</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">text_box_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">command_dict</span><span class="o">.</span><span class="n">textbox_args</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">default_args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_text_box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">command_dict</span><span class="o">.</span><span class="n">show_text_box</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">default_args</span><span class="p">)</span>
+        
+        <span class="c1"># class Button values for MonitorScanSave</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Execute Command &#39;</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button_style</span> <span class="o">=</span> <span class="s1">&#39;success&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tooltip</span> <span class="o">=</span> <span class="s1">&#39;Click me&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">icon</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s1">&#39;300px&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Arguments textbox</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span>
+            <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">text_box_args</span><span class="p">,</span>
+            <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Type the arguments&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;300px&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+               
+        <span class="c1"># Logging</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+        
+        <span class="c1"># Set callback function for click event</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_start_button</span><span class="p">)</span>
+        
+        <span class="c1"># Widgets displays</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_button</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="bp">self</span><span class="p">])</span>
+        
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_start_button</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+        <span class="c1"># Clear previous logs outputs</span>
+        <span class="n">b</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+        
+        <span class="c1"># with statement to output logs in stdou (if this option is enabled)</span>
+        <span class="k">with</span> <span class="n">b</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+            <span class="c1"># Change button to a &quot;clicked status&quot;</span>
+            <span class="n">b</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">b</span><span class="o">.</span><span class="n">button_style</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">b</span><span class="o">.</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Executing...&#39;</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">logprint</span><span class="p">(</span><span class="s2">&quot;Executing command &quot;</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        
+                <span class="n">b</span><span class="o">.</span><span class="n">command_dict</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                
+                <span class="c1"># while True:</span>
+                <span class="c1">#     output = process.stdout.readline()</span>
+                <span class="c1">#     if output == &#39;&#39; and process.poll() is not None:</span>
+                <span class="c1">#         break</span>
+                <span class="c1">#     if output:</span>
+                <span class="c1">#         print(output.strip())</span>
+
+                <span class="n">logprint</span><span class="p">(</span><span class="s2">&quot;Finished executing command &quot;</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="c1"># If any error occurs, log that but dont stop code exection</span>
+                <span class="n">logprint</span><span class="p">(</span><span class="s2">&quot;Error in executing command &quot;</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;[ERROR]&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+                <span class="n">logprint</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="s2">&quot;[ERROR]&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+            <span class="c1"># We should sleep for some time to give some responsiveness to the user</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+
+            <span class="c1"># Change button layout monitoring</span>
+            <span class="n">b</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">b</span><span class="o">.</span><span class="n">button_style</span> <span class="o">=</span> <span class="s1">&#39;success&#39;</span>
+            <span class="n">b</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Execute Command &#39;</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">command</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+    
+<div class="viewcode-block" id="commandButton.display"><a class="viewcode-back" href="../../jupy4syn/widgets/jupy4syn_commandbutton.html#jupy4syn.commandButton.commandButton.display">[docs]</a>    <span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Some commands needs arguments that will be acquired through a text box</span>
+        <span class="c1"># For the commands that don&#39;t need such arguments, the text box will be omitted</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_text_box</span><span class="p">:</span>
+            <span class="n">display</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">output</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">display</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">output</span>
+                <span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, SOL - Software de Operação das Linhas de Luz
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
