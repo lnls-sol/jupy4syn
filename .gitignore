@@ -19,5 +19,5 @@ __pycache__/
 core
 
 # Documentation source
-docs/source
+docs/build
 docs/Makefile
