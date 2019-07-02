@@ -1,4 +1,5 @@
 import subprocess
+import os
 
 from jupy4syn.commands.ICommand import ICommand
 
@@ -7,7 +8,7 @@ class xpra_scanCommand(ICommand):
         pass
 
     def exec(self, parameters):
-        p = subprocess.Popen(["scan_gui"], env=dict(DISPLAY=":100"), stdout=subprocess.PIPE)
+        p = subprocess.Popen(["scan_gui"], env=dict(os.environ, DISPLAY=":100"), stdout=subprocess.PIPE)
         stdout = p.communicate()[0]
         print(stdout)
 

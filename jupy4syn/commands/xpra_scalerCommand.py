@@ -1,4 +1,5 @@
 import subprocess
+import os
 
 from jupy4syn.commands.ICommand import ICommand
 
@@ -7,7 +8,7 @@ class xpra_scalerCommand(ICommand):
         pass
 
     def exec(self, parameters):
-        p = subprocess.Popen(["scaler", "-m", parameters], env=dict(DISPLAY=":100"), stdout=subprocess.PIPE)
+        p = subprocess.Popen(["scaler", "-m", parameters], env=dict(os.environ, DISPLAY=":100"), stdout=subprocess.PIPE)
         stdout = p.communicate()[0]
         print(stdout)
 
