@@ -8,9 +8,7 @@ class xpra_scanCommand(ICommand):
         pass
 
     def exec(self, parameters):
-        p = subprocess.Popen(["scan_gui"], env=dict(os.environ, DISPLAY=":100"), stdout=subprocess.PIPE)
-        stdout = p.communicate()[0]
-        print(stdout)
+        subprocess.Popen(["scan_gui"], env=dict(os.environ, DISPLAY=":100"), stdout=subprocess.PIPE)
 
     def args(self, initial_args):
         return initial_args

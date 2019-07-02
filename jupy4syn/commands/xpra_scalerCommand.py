@@ -8,9 +8,7 @@ class xpra_scalerCommand(ICommand):
         pass
 
     def exec(self, parameters):
-        p = subprocess.Popen(["scaler", "-m", parameters], env=dict(os.environ, DISPLAY=":100"), stdout=subprocess.PIPE)
-        stdout = p.communicate()[0]
-        print(stdout)
+        subprocess.Popen(["scaler", "-m", parameters], env=dict(os.environ, DISPLAY=":100"), stdout=subprocess.PIPE)
 
     def args(self, initial_args):
         if not initial_args:
