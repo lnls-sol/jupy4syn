@@ -7,7 +7,7 @@ class xpra_scalerCommand(ICommand):
         pass
 
     def exec(self, parameters):
-        p = subprocess.Popen(["DISPLAY=:100", "scaler -m " + parameters], stdout=subprocess.PIPE)
+        p = subprocess.Popen(["scaler", "-m", parameters], env=dict(DISPLAY=":100"), stdout=subprocess.PIPE)
         stdout = p.communicate()[0]
         print(stdout)
 
