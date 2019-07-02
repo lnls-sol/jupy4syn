@@ -15,6 +15,8 @@ from jupy4syn.commands.vortexCommand import vortexCommand
 from jupy4syn.commands.pymcaCommand import pymcaCommand
 from jupy4syn.commands.putCommand import putCommand
 from jupy4syn.commands.getCommand import getCommand
+from jupy4syn.commands.slitsCommand import slitsCommand
+from jupy4syn.commands.xpra_scalerCommand import xpra_scalerCommand
 
 
 class commandDict():
@@ -52,7 +54,9 @@ class commandDict():
             "vortex": vortexCommand(),
             "pymca": pymcaCommand(),
             "put": putCommand(config),
-            "get": getCommand(config)
+            "get": getCommand(config),
+            "slits": slitsCommand(config),
+            "xpra_scaler": xpra_scalerCommand()
         }
 
     def execute(self, command, parameters):

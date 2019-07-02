@@ -41,7 +41,7 @@ class commandButton(widgets.Button):
         self.command = command
         self.command_dict = commandDict()
 
-        self.text_box_args = self.command_dict.textbox_args(command, default_args)
+        self.parsed_args = self.command_dict.textbox_args(command, default_args)
         self.show_text_box = self.command_dict.show_text_box(command, default_args)
         
         # class Button values for MonitorScanSave
@@ -54,7 +54,7 @@ class commandButton(widgets.Button):
 
         # Arguments textbox
         self.arguments = widgets.Text(
-            value=self.text_box_args,
+            value=str(self.parsed_args),
             placeholder="Type the arguments",
             description="",
             disabled=False,
@@ -85,7 +85,7 @@ class commandButton(widgets.Button):
             try:
                 logprint("Executing command " + b.command, config=b.config)
         
-                b.command_dict.execute(b.command, b.arguments.value)
+                b.command_dict.execute(b.command, b.parsed_args)
                 
                 # while True:
                 #     output = process.stdout.readline()
