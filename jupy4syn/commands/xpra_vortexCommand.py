@@ -3,12 +3,12 @@ import os
 
 from jupy4syn.commands.ICommand import ICommand
 
-class xpra_scalerCommand(ICommand):
+class xpra_vortexCommand(ICommand):
     def __init__(self, config):
         self.config = config
 
     def exec(self, parameters):
-        subprocess.Popen(["scaler", "-m", parameters], env=dict(os.environ, DISPLAY=":"+self.config.display_server.value), stdout=subprocess.PIPE)
+        subprocess.Popen(["vortex", "-m", parameters], env=dict(os.environ, DISPLAY=":"+self.config.display_server.value), stdout=subprocess.PIPE)
 
     def args(self, initial_args):
         if not initial_args:

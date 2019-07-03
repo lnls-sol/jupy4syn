@@ -12,6 +12,7 @@ class Configuration():
         Such information are:
         - Printing log in the output cell
         - Notebook's name
+        - Display settings
         - Plot information
         """
         self.checkbox_logprint_in_cell = widgets.Checkbox(
@@ -19,6 +20,14 @@ class Configuration():
             description="Print log in Notebook's cells",
             disabled=False,
             style={'description_width': 'initial'},
+        )
+
+        self.display_server = widgets.Text(
+            value='',
+            placeholder="Type a display value",
+            description="",
+            disabled=False,
+            layout=widgets.Layout(width="300px")
         )
 
         self.notebook_name = widgets.Text(
@@ -42,5 +51,6 @@ class Configuration():
         Display method
         """
         display(self.checkbox_logprint_in_cell,
+                self.display_server,
                 widgets.HBox([widgets.Label("Notebook's name: "), self.notebook_name]),
                 self.output)
