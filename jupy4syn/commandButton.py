@@ -39,7 +39,7 @@ class commandButton(widgets.Button):
 
         # Command Dictionary
         self.command = command
-        self.command_dict = commandDict()
+        self.command_dict = commandDict(config=self.config)
 
         self.parsed_args = self.command_dict.textbox_args(command, default_args)
         self.show_text_box = self.command_dict.show_text_box(command, default_args)
