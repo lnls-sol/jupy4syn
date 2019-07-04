@@ -5,9 +5,6 @@ import os
 import ipywidgets as widgets
 from IPython.display import display
 
-# Jupy4Syn
-from jupy4syn.utils import logprint
-
 # scan-utils
 import scan_utils.configuration as scan_utils
 
@@ -52,7 +49,7 @@ class Configuration():
             user = os.environ["JUPYTERHUB_USER"]
             self.display_number = str(data[user])
         except KeyError:
-            logprint("User '" + user + "' not defined in display users. Please, contact support.", "[ERROR]", config=self)
+            print("User '" + user + "' not defined in display users. Please, contact support.")
 
 
     def display(self):
