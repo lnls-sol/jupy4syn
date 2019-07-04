@@ -1,8 +1,9 @@
+import os
 import subprocess
 
 from jupy4syn.commands.ICommand import ICommand
 
-class slitsCommand(ICommand):
+class xpra_slitsCommand(ICommand):
     def __init__(self, config):
         self.config = config
 
@@ -10,7 +11,7 @@ class slitsCommand(ICommand):
         if self.check_parameters(parameters):
             pvs_parameters = [self.config.yml_motors[motor]["pv"] for motor in parameters]
 
-            subprocess.Popen(["slits"] + pvs_parameters)
+            subprocess.Popen(["slits"] + pvs_parameters, env=dict(os.environ, DISPLAY=":"+self.config.display_number))
         else:
             raise ValueError("Invalid parameter")
 

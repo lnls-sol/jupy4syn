@@ -20,6 +20,7 @@ from jupy4syn.commands.xpra_scalerCommand import xpra_scalerCommand
 from jupy4syn.commands.xpra_scanCommand import xpra_scanCommand
 from jupy4syn.commands.xpra_energyscanCommand import xpra_energyscanCommand
 from jupy4syn.commands.xpra_vortexCommand import xpra_vortexCommand
+from jupy4syn.commands.xpra_slitsCommand import xpra_slitsCommand
 
 class commandDict():
     def __init__(self, config=Configuration(), *args, **kwargs):
@@ -61,7 +62,8 @@ class commandDict():
             "xpra_scaler": xpra_scalerCommand(config),
             "xpra_scan_gui": xpra_scanCommand(config),
             "xpra_energy_scan_gui": xpra_energyscanCommand(config),
-            "xpra_vortex": xpra_vortexCommand(config)
+            "xpra_vortex": xpra_vortexCommand(config),
+            "xpra_slits": xpra_slitsCommand(config)
         }
 
     def execute(self, command, parameters):
