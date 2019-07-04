@@ -5,8 +5,12 @@ import os
 import ipywidgets as widgets
 from IPython.display import display
 
+# Jupy4Syn
+from jupy4syn.utils import logprint
+
 # scan-utils
 import scan_utils.configuration as scan_utils
+
 
 class Configuration():
     def __init__(self):
@@ -44,7 +48,12 @@ class Configuration():
         with open("/etc/xpra/users_displays.json", "r") as file:
             data = json.load(file)
 
-        self.display_number = str(data[os.environ["JUPYTERHUB_USER"]])
+        try:
+            user = os.environ["JUPYTERHUB_USER"]
+            self.display_number = str(data[user])
+        except KeyError:
+            logprint("User '" + user + "' not defined in display users. Please, contact support.", "[ERROR]", config=self)
+
 
     def display(self):
         """
