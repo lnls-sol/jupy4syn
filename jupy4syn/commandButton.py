@@ -85,7 +85,7 @@ class commandButton(widgets.Button):
             try:
                 logprint("Executing command " + b.command, config=b.config)
         
-                b.command_dict.execute(b.command, b.parsed_args)
+                b.command_dict.execute(b.command, b.arguments.value)
                 
                 # while True:
                 #     output = process.stdout.readline()
