@@ -8,7 +8,7 @@ class xpra_energyscanCommand(ICommand):
         self.config = config
 
     def exec(self, parameters):
-        subprocess.Popen(["energy_scan_gui", parameters], env=dict(os.environ, DISPLAY=":"+self.config.display_server.value))
+        subprocess.Popen(["energy_scan_gui", parameters], env=dict(os.environ, DISPLAY=":"+self.config.display_number))
 
     def args(self, initial_args):
         if not initial_args:

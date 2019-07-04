@@ -1,3 +1,6 @@
+import json
+import os
+
 # Widgets
 import ipywidgets as widgets
 from IPython.display import display
@@ -22,14 +25,6 @@ class Configuration():
             style={'description_width': 'initial'},
         )
 
-        self.display_server = widgets.Text(
-            value='',
-            placeholder="Type a display value",
-            description="",
-            disabled=False,
-            layout=widgets.Layout(width="300px")
-        )
-
         self.notebook_name = widgets.Text(
             value='',
             placeholder="Type the notebook's name without file format",
@@ -46,11 +41,15 @@ class Configuration():
         self.yml_motors = scan_utils.Configuration()['motors']
         self.yml_counters = scan_utils.Configuration()['counters']
 
+        with open("/etc/xpra/users_displays.json", "r") as file:
+            data = json.load(file)
+
+        self.display_number = data[os.environ["JUPYTERHUB_USER"]]
+
     def display(self):
         """
         Display method
         """
         display(self.checkbox_logprint_in_cell,
-                self.display_server,
                 widgets.HBox([widgets.Label("Notebook's name: "), self.notebook_name]),
                 self.output)

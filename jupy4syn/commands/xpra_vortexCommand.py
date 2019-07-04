@@ -8,7 +8,7 @@ class xpra_vortexCommand(ICommand):
         self.config = config
 
     def exec(self, parameters):
-        subprocess.Popen(["vortex", "-m", parameters], env=dict(os.environ, DISPLAY=":"+self.config.display_server.value))
+        subprocess.Popen(["vortex", "-m", parameters], env=dict(os.environ, DISPLAY=":"+self.config.display_number))
     
     def args(self, initial_args):
         if not initial_args:
