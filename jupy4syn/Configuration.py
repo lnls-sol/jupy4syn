@@ -43,8 +43,10 @@ class Configuration():
 
         with open("/etc/xpra/users_displays.json", "r") as file:
             data = json.load(file)
+        print(data)
 
         self.display_number = data[os.environ["JUPYTERHUB_USER"]]
+        print(self.display_number)
 
     def display(self):
         """
