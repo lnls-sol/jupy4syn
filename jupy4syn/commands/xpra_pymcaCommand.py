@@ -3,7 +3,7 @@ import os
 
 from jupy4syn.commands.ICommand import ICommand
 
-class pymcaCommand(ICommand):
+class xpra_pymcaCommand(ICommand):
     def __init__(self, config):
         self.config = config
 
