@@ -47,6 +47,10 @@ class Configuration():
 
         try:
             user = os.environ["JUPYTERHUB_USER"]
+        except KeyError:
+            user = os.environ["HOME"].split("/")[-1]
+        
+        try:
             self.display_number = str(data[user])
         except KeyError:
             print("User '" + user + "' not defined in display users. Please, contact support.")
