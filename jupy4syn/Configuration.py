@@ -10,7 +10,7 @@ import scan_utils.configuration as scan_utils
 
 
 class Configuration():
-    def __init__(self):
+    def __init__(self, xpra=True):
         """
         The Configuration class provides runtime information for the Jupy4Syn classes.
         Such information are:
@@ -19,6 +19,8 @@ class Configuration():
         - Display settings
         - Plot information
         """
+        self.xpra = xpra
+
         self.checkbox_logprint_in_cell = widgets.Checkbox(
             value=False,
             description="Print log in Notebook's cells",
@@ -43,20 +45,21 @@ class Configuration():
         self.yml_counters = scan_utils.Configuration()['counters']
 
         try:
-            with open("/etc/xpra/users_displays.json", "r") as file:
-                data = json.load(file)
-        except Exception as e:
-            pass
-
-        try:
             user = os.environ["JUPYTERHUB_USER"]
         except KeyError:
             user = os.environ["HOME"].split("/")[-1]
+
+        if self.xpra:
+            with open("/etc/xpra/users_displays.json", "r") as file:
+                data = json.load(file)
         
-        try:
-            self.display_number = str(data[user])
-        except KeyError:
-            print("User '" + user + "' not defined in display users. Please, contact support.")
+            try:
+                self.display_number = str(data[user])
+            except KeyError:
+                print("User '" + user + "' not defined in display users. Please, contact support.")
+
+        else:
+            self.display_number = '0'
 
 
     def display(self):
