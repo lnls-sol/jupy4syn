@@ -42,8 +42,11 @@ class Configuration():
         self.yml_motors = scan_utils.Configuration()['motors']
         self.yml_counters = scan_utils.Configuration()['counters']
 
-        with open("/etc/xpra/users_displays.json", "r") as file:
-            data = json.load(file)
+        try:
+            with open("/etc/xpra/users_displays.json", "r") as file:
+                data = json.load(file)
+        except Exception as e:
+            pass
 
         try:
             user = os.environ["JUPYTERHUB_USER"]
