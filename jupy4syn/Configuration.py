@@ -1,4 +1,4 @@
-import json
+import yaml
 import os
 
 # Widgets
@@ -50,8 +50,8 @@ class Configuration():
             user = os.environ["HOME"].split("/")[-1]
 
         if self.xpra:
-            with open("/etc/xpra/users_displays.json", "r") as file:
-                data = json.load(file)
+            with open("/etc/jupyterhub-displays/users_displays.yaml", "r") as file:
+                data = yaml.safe_load(file)
         
             try:
                 self.display_number = str(data[user])
