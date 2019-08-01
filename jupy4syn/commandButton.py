@@ -39,9 +39,9 @@ class commandButton(widgets.Button):
 
         # Command Dictionary
         self.command = command
-        self.command_dict = commandDict()
+        self.command_dict = commandDict(config=self.config)
 
-        self.text_box_args = self.command_dict.textbox_args(command, default_args)
+        self.parsed_args = self.command_dict.textbox_args(command, default_args)
         self.show_text_box = self.command_dict.show_text_box(command, default_args)
         
         # class Button values for MonitorScanSave
@@ -54,7 +54,7 @@ class commandButton(widgets.Button):
 
         # Arguments textbox
         self.arguments = widgets.Text(
-            value=self.text_box_args,
+            value=str(self.parsed_args),
             placeholder="Type the arguments",
             description="",
             disabled=False,

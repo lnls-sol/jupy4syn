@@ -1,3 +1,6 @@
+import yaml
+import os
+
 # Widgets
 import ipywidgets as widgets
 from IPython.display import display
@@ -5,15 +8,19 @@ from IPython.display import display
 # scan-utils
 import scan_utils.configuration as scan_utils
 
+
 class Configuration():
-    def __init__(self):
+    def __init__(self, xpra=True):
         """
         The Configuration class provides runtime information for the Jupy4Syn classes.
         Such information are:
         - Printing log in the output cell
         - Notebook's name
+        - Display settings
         - Plot information
         """
+        self.xpra = xpra
+
         self.checkbox_logprint_in_cell = widgets.Checkbox(
             value=False,
             description="Print log in Notebook's cells",
@@ -36,6 +43,24 @@ class Configuration():
 
         self.yml_motors = scan_utils.Configuration()['motors']
         self.yml_counters = scan_utils.Configuration()['counters']
+
+        try:
+            user = os.environ["JUPYTERHUB_USER"]
+        except KeyError:
+            user = os.environ["HOME"].split("/")[-1]
+
+        if self.xpra:
+            with open("/etc/jupyterhub-displays/users_displays.yaml", "r") as file:
+                data = yaml.safe_load(file)
+        
+            try:
+                self.display_number = str(data[user])
+            except KeyError:
+                print("User '" + user + "' not defined in display users. Please, contact support.")
+
+        else:
+            self.display_number = '0'
+
 
     def display(self):
         """

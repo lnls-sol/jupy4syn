@@ -24,12 +24,12 @@ class putCommand(ICommand):
                 try:
                     self.pv = PV(self.config.yml_motors[self.name]['pv'])
                 except KeyError:
-                    raise ValueError('Motor %s doesn\'t have pv field' % name)
+                    raise ValueError('Motor %s doesn\'t have pv field' % self.name)
             elif self.name in self.config.yml_counters:
                 try:
                     self.pv = PV(self.config.yml_counters[self.name]['pv'])
                 except KeyError:
-                    raise ValueError('Counter %s doesn\'t have pv field' % name)
+                    raise ValueError('Counter %s doesn\'t have pv field' % self.name)
             else:
                 raise ValueError("Invalid name. Name provided is neither a conencted PV neither a config.yml mnemonic")
 
