@@ -10,7 +10,7 @@ import scan_utils.configuration as scan_utils
 
 
 class Configuration():
-    def __init__(self, xpra=True):
+    def __init__(self):
         """
         The Configuration class provides runtime information for the Jupy4Syn classes.
         Such information are:
@@ -19,8 +19,6 @@ class Configuration():
         - Display settings
         - Plot information
         """
-        self.xpra = xpra
-
         self.checkbox_logprint_in_cell = widgets.Checkbox(
             value=False,
             description="Print log in Notebook's cells",
@@ -44,22 +42,24 @@ class Configuration():
         self.yml_motors = scan_utils.Configuration()['motors']
         self.yml_counters = scan_utils.Configuration()['counters']
 
-        try:
-            user = os.environ["JUPYTERHUB_USER"]
-        except KeyError:
-            user = os.environ["HOME"].split("/")[-1]
+        # Test if execution is in a JupyterHub environment, a local Jupyter environment
+        if 'JUPYTERHUB_USER' in os.environ.keys():
+            user = os.environ['JUPYTERHUB_USER']
+            jupyterhub = True
+        else:
+            jupyterhub = False
 
-        if self.xpra:
+        if jupyterhub:
             with open("/etc/jupyterhub-displays/users_displays.yaml", "r") as file:
                 data = yaml.safe_load(file)
         
             try:
                 self.display_number = str(data[user])
-            except KeyError:
-                print("User '" + user + "' not defined in display users. Please, contact support.")
+            except KeyError as e:
+                raise("User '" + user + "' not defined in display users. Please, contact support.\n" + str(e))
 
         else:
-            self.display_number = '0'
+            self.display_number = ':0.0'
 
 
     def display(self):

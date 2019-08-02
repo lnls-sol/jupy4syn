@@ -1,13 +1,15 @@
+import os
 import subprocess
 
+from jupy4syn.Configuration import Configuration
 from jupy4syn.commands.ICommand import ICommand
 
 class scalerCommand(ICommand):
-    def __init__(self):
-        pass
+    def __init__(self, config=Configuration()):
+        self.config = config
 
     def exec(self, parameters):
-        subprocess.Popen(["scaler", "-m", parameters])
+        subprocess.Popen(["scaler", "-m", parameters], env=dict(os.environ, DISPLAY=self.config.display_number))
 
     def args(self, initial_args):
         if not initial_args:
