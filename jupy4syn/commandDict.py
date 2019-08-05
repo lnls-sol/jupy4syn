@@ -24,6 +24,7 @@ from jupy4syn.commands.xpra_vortexCommand import xpra_vortexCommand
 from jupy4syn.commands.xpra_slitsCommand import xpra_slitsCommand
 from jupy4syn.commands.xpra_pymcaCommand import xpra_pymcaCommand
 from jupy4syn.commands.xpra_motorsCommand import xpra_motorsCommand
+from jupy4syn.commands.userCommand import userCommand
 
 class commandDict():
     def __init__(self, config=Configuration(), *args, **kwargs):
@@ -50,6 +51,7 @@ class commandDict():
 
         # Dictionaries
         self.commands_dict = {
+            "user_defined": userCommand(),
             "ct": ctCommand(),
             "wa": waCommand(),
             "wm": wmCommand(),
