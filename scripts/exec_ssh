@@ -10,5 +10,4 @@ USERNAME=$USER
 HOSTNAME=$1
 SCRIPT="/usr/local/bin/connect_display.py"
 
-ssh -o StrictHostKeyChecking=no -X ${USERNAME}@${HOSTNAME} "${SCRIPT}" > ./display.txt
-ssh -o StrictHostKeyChecking=no -X ${USERNAME}@${HOSTNAME} 
+ssh -o StrictHostKeyChecking=no -X ${USERNAME}@${HOSTNAME} "${SCRIPT}"
