@@ -9,7 +9,7 @@ class userCommand(ICommand):
         self.config = config
 
     def exec(self, parameters):
-        subprocess.Popen([parameters.split(" ")], env=dict(os.environ, DISPLAY=self.config.display_number)) 
+        subprocess.Popen(parameters.split(" "), env=dict(os.environ, DISPLAY=self.config.display_number)) 
 
     def args(self, initial_args):
         return initial_args

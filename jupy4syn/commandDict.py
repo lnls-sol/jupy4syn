@@ -51,7 +51,7 @@ class commandDict():
 
         # Dictionaries
         self.commands_dict = {
-            "user_defined": userCommand(),
+            "": userCommand(),
             "ct": ctCommand(),
             "wa": waCommand(),
             "wm": wmCommand(),
