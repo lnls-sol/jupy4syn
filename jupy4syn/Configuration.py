@@ -50,7 +50,7 @@ class Configuration():
             jupyterhub = False
 
         if jupyterhub:
-            with open("/etc/jupyterhub-displays/users_displays.yaml", "r") as file:
+            with open("/etc/jupyterhub-displays/users_displays.yml", "r") as file:
                 data = yaml.safe_load(file)
         
             try:
