@@ -36,11 +36,22 @@ def add_user_display(username, display):
         else:
             break
     if test_lock(DISPLAYS_YAML):
-        raise TimeoutError("Some process is locking '/etc/jupyterhub-displays/users_displays.yaml' edition. \
-                            Please, try again or contact support.")
+        print(TimeoutError("Some process is locking '/etc/jupyterhub-displays/users_displays.yaml' edition. \
+                            Please, try again or contact support."))
+
+        # This exception will be caught by the main function
+        raise Exception           
 
     # Create lock to avoid data race
     create_lock(DISPLAYS_YAML)
+
+    # Test the existence of DISPLAYS_YAML file. If DISPLAYS_YAML is missing, user should contact support.
+    if not os.path.isfile(DISPLAYS_DIRECTORY + DISPLAYS_YAML):
+        print("ERROR. There is no '" + DISPLAYS_YAML + "' file. Please, contact support.")
+        delete_lock(DISPLAYS_YAML)
+        
+        # This exception will be caught by the main function
+        raise Exception
 
     # Open DISPLAYS_YAML in read mode and load its contents. If the file is empty, YAML will return a
     # NoneType object, in this case we should create an empty dictionary
@@ -50,10 +61,18 @@ def add_user_display(username, display):
         if displays_yaml is None:
             displays_yaml = {}
 
-    # Open DISPLAYS_YAML in write mode, and write the updated content.
-    with open(DISPLAYS_DIRECTORY + DISPLAYS_YAML, 'w') as write_displays_yaml_file:
-        displays_yaml[username] = display
-        yaml.dump(displays_yaml, write_displays_yaml_file)
+    try:
+        # Open DISPLAYS_YAML in write mode, and write the updated content.
+        with open(DISPLAYS_DIRECTORY + DISPLAYS_YAML, 'w') as write_displays_yaml_file:
+            displays_yaml[username] = display
+            yaml.dump(displays_yaml, write_displays_yaml_file)
+    except PermissionError as e:
+        print(e)
+        print("Please, contact support.")
+        delete_lock(DISPLAYS_YAML)
+        
+        # This exception will be caught by the main function
+        raise Exception
     
     # Ends edition
     delete_lock(DISPLAYS_YAML)
@@ -72,7 +91,11 @@ def main():
     create_lock(user)
 
     # Add user display to DISPLAYS_YAML
-    add_user_display(user, display)
+    try:
+        add_user_display(user, display)
+    except Exception:
+        delete_lock(user)
+        exit(1)
 
     # Stay connected until user manually 
     print("Connected to remote display.")
