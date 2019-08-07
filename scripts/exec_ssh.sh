@@ -1,13 +1,9 @@
 #!/bin/bash
 
-if [[ ! ("$#" == 1) ]]; then 
-	echo "1 argument required, $# provided."
-	echo "Usage: exec_ssh <hostname>"
-	exit 1
-fi
+echo "Remote machine hostname: "
+read HOSTNAME
 
 USERNAME=$USER
-HOSTNAME=$1
 SCRIPT="/usr/local/bin/connect_display.py"
 
 ssh -o StrictHostKeyChecking=no -X ${USERNAME}@${HOSTNAME} "${SCRIPT}"
