@@ -10,9 +10,10 @@ class slitsCommand(ICommand):
 
     def exec(self, parameters):
         if self.check_parameters(parameters):
-            pvs_parameters = [self.config.yml_motors[motor]["pv"] for motor in parameters]
+            # pvs_parameters = [self.config.yml_motors[motor]["pv"] for motor in parameters]
+            # pvs_parameters = [self.config.yml_motors[motor]["pv"] for motor in [item for item in parameters if item != '--user']]
 
-            subprocess.Popen(["slits"] + pvs_parameters, env=dict(os.environ, DISPLAY=self.config.display_number))
+            subprocess.Popen(["slits"] + parameters.split(), env=dict(os.environ, DISPLAY=self.config.display_number))
         else:
             raise ValueError("Invalid parameter")
 
@@ -21,12 +22,15 @@ class slitsCommand(ICommand):
             return "<m-left> <m-right> <m-top> <m-bot>"
         else:
             if isinstance(initial_args, str):
-                return initial_args.split()
-            elif isinstance(initial_args, (list, tuple)):
                 return initial_args
+            elif isinstance(initial_args, (list, tuple)):
+                return ' '.join(initial_args)
             elif isinstance(initial_args, dict):
                 if "left" in initial_args and "right" in initial_args and "top" in initial_args and "bottom" in initial_args:
-                    return [initial_args["left"], initial_args["right"], initial_args["top"], initial_args["bottom"]]
+                    if 'user' in initial_args and initial_args['user']:
+                        return ' '.join([initial_args["left"], initial_args["right"], initial_args["top"], initial_args["bottom"], '--user'])
+                    else:
+                        return ' '.join([initial_args["left"], initial_args["right"], initial_args["top"], initial_args["bottom"]])
 
     def show(self, initial_args):
         if not initial_args:
@@ -38,8 +42,12 @@ class slitsCommand(ICommand):
         if isinstance(parameters, str):
             if len(parameters.split()) == 4:
                 return True
+            elif len(parameters.split()) == 5 and '--user' in parameters:
+                return True
         elif isinstance(parameters, (list, tuple)):
             if len(parameters) == 4:
+                return True
+            elif len(parameters) == 5 and '--user' in parameters:
                 return True
         elif isinstance(parameters, dict):
             if "left" in parameters and "right" in parameters and "top" in parameters and "bottom" in parameters:
