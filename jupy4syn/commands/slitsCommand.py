@@ -10,10 +10,11 @@ class slitsCommand(ICommand):
 
     def exec(self, parameters):
         if self.check_parameters(parameters):
-            # pvs_parameters = [self.config.yml_motors[motor]["pv"] for motor in parameters]
-            # pvs_parameters = [self.config.yml_motors[motor]["pv"] for motor in [item for item in parameters if item != '--user']]
+            pvs_parameters = [self.config.yml_motors[motor]['pv'] for motor in [item for item in parameters.split() if item != '--user']]
+            if '--user' in parameters:
+                pvs_parameters.append('--user')
 
-            subprocess.Popen(["slits"] + parameters.split(), env=dict(os.environ, DISPLAY=self.config.display_number))
+            subprocess.Popen(["slits"] + pvs_parameters, env=dict(os.environ, DISPLAY=self.config.display_number))
         else:
             raise ValueError("Invalid parameter")
 
@@ -26,11 +27,20 @@ class slitsCommand(ICommand):
             elif isinstance(initial_args, (list, tuple)):
                 return ' '.join(initial_args)
             elif isinstance(initial_args, dict):
-                if "left" in initial_args and "right" in initial_args and "top" in initial_args and "bottom" in initial_args:
-                    if 'user' in initial_args and initial_args['user']:
-                        return ' '.join([initial_args["left"], initial_args["right"], initial_args["top"], initial_args["bottom"], '--user'])
-                    else:
-                        return ' '.join([initial_args["left"], initial_args["right"], initial_args["top"], initial_args["bottom"]])
+                # if "left" in initial_args and "right" in initial_args and "top" in initial_args and "bottom" in initial_args:
+                #     if 'user' in initial_args and initial_args['user']:
+                #         return ' '.join([initial_args["left"], initial_args["right"], initial_args["top"], initial_args["bottom"], '--user'])
+                #     else:
+                #         return ' '.join([initial_args["left"], initial_args["right"], initial_args["top"], initial_args["bottom"]])
+                valid_keys = ['left', 'right', 'top', 'bottom']
+                parsed_args = []
+                for key in [valid_key for valid_key in initial_args.keys() if valid_key in valid_keys]:
+                    parsed_args.append(initial_args[key])
+
+                if 'user' not in initial_args or ('user' in initial_args and initial_args['user']):
+                    parsed_args.append('--user')
+
+                return ' '.join(parsed_args)
 
     def show(self, initial_args):
         if not initial_args:
