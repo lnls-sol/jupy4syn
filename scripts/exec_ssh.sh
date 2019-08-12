@@ -6,4 +6,4 @@ read HOSTNAME
 USERNAME=$USER
 SCRIPT="/usr/local/bin/connect_display.py"
 
-ssh -o StrictHostKeyChecking=no -X ${USERNAME}@${HOSTNAME} "${SCRIPT}"
+ssh -X ${USERNAME}@${HOSTNAME} "${SCRIPT}"
