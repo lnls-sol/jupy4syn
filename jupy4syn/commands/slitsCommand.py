@@ -27,11 +27,6 @@ class slitsCommand(ICommand):
             elif isinstance(initial_args, (list, tuple)):
                 return ' '.join(initial_args)
             elif isinstance(initial_args, dict):
-                # if "left" in initial_args and "right" in initial_args and "top" in initial_args and "bottom" in initial_args:
-                #     if 'user' in initial_args and initial_args['user']:
-                #         return ' '.join([initial_args["left"], initial_args["right"], initial_args["top"], initial_args["bottom"], '--user'])
-                #     else:
-                #         return ' '.join([initial_args["left"], initial_args["right"], initial_args["top"], initial_args["bottom"]])
                 valid_keys = ['left', 'right', 'top', 'bottom']
                 parsed_args = []
                 for key in [valid_key for valid_key in initial_args.keys() if valid_key in valid_keys]:

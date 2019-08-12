@@ -14,7 +14,7 @@ class motorsCommand(ICommand):
             if '--user' in parameters:
                 pvs_parameters.append('--user')
 
-            subprocess.Popen(["motors_gui"] + parameters.split(), env=dict(os.environ, DISPLAY=self.config.display_number))
+            subprocess.Popen(["motors_gui"] + pvs_parameters, env=dict(os.environ, DISPLAY=self.config.display_number))
         else:
             raise ValueError("Invalid parameter")
 
@@ -27,23 +27,13 @@ class motorsCommand(ICommand):
             elif isinstance(initial_args, (list, tuple)):
                 return ' '.join(initial_args)
             elif isinstance(initial_args, dict):
-                parsed_args = []
-                # if "m1" in initial_args and "m2" in initial_args and "m3" in initial_args and "m4" in initial_args and "m5" in initial_args:
-                #     parsed_args = [initial_args["m1"], initial_args["m2"], initial_args["m3"], initial_args["m4"], initial_args["m5"]]
-                # elif "m1" in initial_args and "m2" in initial_args and "m3" in initial_args and "m4":
-                #     parsed_args = [initial_args["m1"], initial_args["m2"], initial_args["m3"], initial_args["m4"]]
-                # elif "m1" in initial_args and "m2" in initial_args and "m3":
-                #     parsed_args = [initial_args["m1"], initial_args["m2"], initial_args["m3"]]
-                # elif "m1" in initial_args and "m2":
-                #     parsed_args = [initial_args["m1"], initial_args["m2"]]
-                # elif "m1" in initial_args:
-                #     parsed_args = [initial_args["m1"]]
-
                 valid_keys = ['m1', 'm2', 'm3', 'm4', 'm5']
+                parsed_args = []
+                
                 for key in [valid_key for valid_key in initial_args.keys() if valid_key in valid_keys]:
                     parsed_args.append(initial_args[key])
 
-                if 'user' not in initial_args or ('user' in initial_args and not initial_args['user']):
+                if 'user' not in initial_args or ('user' in initial_args and initial_args['user']):
                     parsed_args.append('--user')
 
                 return ' '.join(parsed_args)
