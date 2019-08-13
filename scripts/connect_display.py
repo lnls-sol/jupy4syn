@@ -112,6 +112,8 @@ def main():
             pass
         except Exception as e:
             print(e)
+        
+        time.sleep(0.1)
     
     # End connection, remove locker for the user
     delete_lock(user)
