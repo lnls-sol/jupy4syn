@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.4] - 2019-08-13
+### Added
+- exec_ssh script for Windows
+
+### Fixed
+- commandButton for commands slits and motors now parses arguments correctly.
+- connect_display script loop performance
+
 ## [0.1.3] - 2019-08-05
 ### Added
 - Generic command for commandButton.
