@@ -10,17 +10,24 @@ class putCommand(ICommand):
         self.pv.put(parameters, wait=False)
 
     def args(self, initial_args):
-        if not initial_args:
-            raise ValueError("Argument list can not be empty.")
-        elif not isinstance(initial_args, list) and len(initial_args) > 2:
-            raise ValueError("Argument must be a list with at most two elements. The PV and the optional value to set.")
-        # Parameter checking
-        if not initial_args[0]:
-            raise ValueError("PV name or mnemonic can not be empty.")
-        elif not isinstance(initial_args[0], str):
-            raise ValueError("PV name or mnemonic must be a string.")
+        if not isinstance(initial_args, str):
+            if not initial_args:
+                raise ValueError("Argument list can not be empty.")
+            elif not isinstance(initial_args, list) and len(initial_args) > 2:
+                raise ValueError("Argument must be a list with at most two elements. The PV and the optional value to set.")
+            # Parameter checking
+            if not initial_args[0]:
+                raise ValueError("PV name or mnemonic can not be empty.")
+            elif not isinstance(initial_args[0], str):
+                raise ValueError("PV name or mnemonic must be a string.")
 
-        self.name = initial_args[0]
+            self.name = initial_args[0]
+        else:
+            if not initial_args:
+                raise ValueError("PV name or mnemonic can not be empty.")
+
+            self.name = initial_args
+        
         self.pv = PV(self.name)
 
         if not self.pv.wait_for_connection():
