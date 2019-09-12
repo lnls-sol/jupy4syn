@@ -27,6 +27,7 @@ class putCommand(ICommand):
                 raise ValueError("PV name or mnemonic can not be empty.")
 
             self.name = initial_args
+            initial_args = [initial_args]
         
         self.pv = PV(self.name)
 
