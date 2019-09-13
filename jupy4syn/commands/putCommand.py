@@ -61,5 +61,8 @@ class putCommand(ICommand):
             self.pv_is_enum = True if self.pv.type == "enum" or self.pv.type == "time_enum" else False
             return str(self.pv.get(as_string=self.pv_is_enum))
 
-    def show(self, initial_args):
-        return True
+    def text_box(self, initial_args):
+        if isinstance(initial_args, (list, tuple)) and len(initial_args) == 2:
+            return True, False
+        else:
+            return True, True

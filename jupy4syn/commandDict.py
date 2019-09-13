@@ -33,9 +33,9 @@ class commandDict():
 
         Parameters
         ----------
-        command: `string`
+        command : :obj:`string`
             Command that will be executed at the button click
-        config: `jupy4syn.Configuration`, optional
+        config : :py:class:`Configuration <jupy4syn.Configuration.Configuration>`, optional
             Configuration object that contains Jupyter Notebook runtime information, by default Configuration()
 
         Examples
@@ -51,27 +51,27 @@ class commandDict():
 
         # Dictionaries
         self.commands_dict = {
-            "": userCommand(),
-            "ct": ctCommand(),
-            "wa": waCommand(),
-            "wm": wmCommand(),
-            "move": moveCommand(),
-            "scaler": scalerCommand(config),
-            "scan_gui": scanCommand(config),
-            "energy_scan_gui": energyscanCommand(config),
-            "vortex": vortexCommand(config),
-            "pymca": pymcaCommand(config),
-            "put": putCommand(config),
-            "get": getCommand(config),
-            "slits": slitsCommand(config),
-            "motors": motorsCommand(config),
-            "xpra_scaler": xpra_scalerCommand(config),
-            "xpra_scan_gui": xpra_scanCommand(config),
-            "xpra_energy_scan_gui": xpra_energyscanCommand(config),
-            "xpra_vortex": xpra_vortexCommand(config),
-            "xpra_slits": xpra_slitsCommand(config),
-            "xpra_pymca": xpra_pymcaCommand(config),
-            "xpra_motors": xpra_motorsCommand(config)
+            # "": userCommand(),
+            # "ct": ctCommand(),
+            # "wa": waCommand(),
+            # "wm": wmCommand(),
+            # "move": moveCommand(),
+            # "scaler": scalerCommand(config),
+            # "scan_gui": scanCommand(config),
+            # "energy_scan_gui": energyscanCommand(config),
+            # "vortex": vortexCommand(config),
+            # "pymca": pymcaCommand(config),
+            "put": putCommand(config)
+            # "get": getCommand(config),
+            # "slits": slitsCommand(config),
+            # "motors": motorsCommand(config),
+            # "xpra_scaler": xpra_scalerCommand(config),
+            # "xpra_scan_gui": xpra_scanCommand(config),
+            # "xpra_energy_scan_gui": xpra_energyscanCommand(config),
+            # "xpra_vortex": xpra_vortexCommand(config),
+            # "xpra_slits": xpra_slitsCommand(config),
+            # "xpra_pymca": xpra_pymcaCommand(config),
+            # "xpra_motors": xpra_motorsCommand(config)
         }
 
     def execute(self, command, parameters):
@@ -80,5 +80,5 @@ class commandDict():
     def textbox_args(self, command, initial_args):
         return self.commands_dict[command].args(initial_args)
 
-    def show_text_box(self, command, initial_args):
-        return self.commands_dict[command].show(initial_args)
+    def text_box(self, command, initial_args):
+        return self.commands_dict[command].text_box(initial_args)

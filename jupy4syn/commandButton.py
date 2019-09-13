@@ -19,16 +19,18 @@ class commandButton(widgets.Button):
 
         Parameters
         ----------
-        command: `string`
+        command : :obj:`string`
             Command that will be executed at the button click
-        config: `jupy4syn.Configuration`, optional
+        default_args : :obj:`string`, optional
+            If provided, command will be executed with these parameters and the textbox will not be displayed
+        config : :py:class:`Configuration <jupy4syn.Configuration.Configuration>`, optional
             Configuration object that contains Jupyter Notebook runtime information, by default Configuration()
 
         Examples
         ----------
         >>> config = Configuration()
             config.display()
-        >>> command = CommandButton(config)
+        >>> command = commandButton("energy_scan_gui", "energy", config)
             command.display()
         """
 
@@ -42,7 +44,7 @@ class commandButton(widgets.Button):
         self.command_dict = commandDict(config=self.config)
 
         self.parsed_args = self.command_dict.textbox_args(command, default_args)
-        self.show_text_box = self.command_dict.show_text_box(command, default_args)
+        self.show_text_box, self.enable_text_box = self.command_dict.text_box(command, default_args)
         
         # class Button values for MonitorScanSave
         self.description = 'Execute Command ' + '"' + self.command + '"'
@@ -57,7 +59,7 @@ class commandButton(widgets.Button):
             value=str(self.parsed_args),
             placeholder="Type the arguments",
             description="",
-            disabled=False,
+            disabled=not self.enable_text_box,
             layout=widgets.Layout(width="300px")
         )
                
@@ -86,13 +88,6 @@ class commandButton(widgets.Button):
                 logprint("Executing command " + b.command, config=b.config)
         
                 b.command_dict.execute(b.command, b.arguments.value)
-                
-                # while True:
-                #     output = process.stdout.readline()
-                #     if output == '' and process.poll() is not None:
-                #         break
-                #     if output:
-                #         print(output.strip())
 
                 logprint("Finished executing command " + b.command, config=b.config)
             except Exception as e:
