@@ -6,6 +6,10 @@ Scaler Button
 .. module:: jupy4syn.ScalerButton
    :synopsis: Python class for Jupy4Syn Scaler Button
 
+.. warning::
+    .. deprecated:: 0.1.2
+        Please, use :class:`jupy4syn.commandButton` instead.
+
 The ScalerButton class provides an ipywidgets interface to open SOL scaler-gui interface
 using the Jupyter Notebook. It shows:
 

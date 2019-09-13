@@ -6,6 +6,10 @@ PV Setter
 .. module:: jupy4syn.PVSetter
    :synopsis: Python class for Jupy4Syn PV Setter
 
+.. warning::
+    .. deprecated:: 0.1.2
+        Please, use :class:`jupy4syn.commandButton` instead.
+
 The PVSetter class provides an ipywidgets interface to help changing and PV value
 using a Jupyter Notebook. It shows:
 

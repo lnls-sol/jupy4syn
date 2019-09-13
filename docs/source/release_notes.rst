@@ -3,4 +3,4 @@
 Release Notes
 =============
 
-.. include:: ../../CHANGES.txt
+.. include:: ../../CHANGELOG.md

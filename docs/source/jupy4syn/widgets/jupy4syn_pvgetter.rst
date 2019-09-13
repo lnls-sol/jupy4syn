@@ -6,6 +6,10 @@ PV Getter
 .. module:: jupy4syn.PVGetter
    :synopsis: Python class for Jupy4Syn PV Getter
 
+.. warning::
+    .. deprecated:: 0.1.2
+        Please, use :class:`jupy4syn.commandButton` instead.
+
 The Getter class provides an ipywidgets interface to help getting the PV value
 using a Jupyter Notebook. It shows:
 
