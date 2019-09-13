@@ -14,8 +14,11 @@ class getCommand(ICommand):
         if not initial_args:
             raise ValueError("PV name or mnemonic can not be empty.")
         elif not isinstance(initial_args, str):
-            raise ValueError("PV name or mnemonic must be a string.")
-
+            if isinstance(initial_args, (list, tuple)) and len(initial_args) == 1:
+                initial_args = initial_args[0]
+            else:
+                raise ValueError("PV name or mnemonic must be a string or a list with a string.")         
+        
         self.name = initial_args
         self.pv = PV(self.name)
 
@@ -47,5 +50,5 @@ class getCommand(ICommand):
 
         return ""
 
-    def show(self, initial_args):
-        return False
+    def text_box(self, initial_args):
+        return False, False

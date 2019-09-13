@@ -61,8 +61,8 @@ class commandDict():
             # "energy_scan_gui": energyscanCommand(config),
             # "vortex": vortexCommand(config),
             # "pymca": pymcaCommand(config),
-            "put": putCommand(config)
-            # "get": getCommand(config),
+            "put": putCommand(config),
+            "get": getCommand(config)
             # "slits": slitsCommand(config),
             # "motors": motorsCommand(config),
             # "xpra_scaler": xpra_scalerCommand(config),

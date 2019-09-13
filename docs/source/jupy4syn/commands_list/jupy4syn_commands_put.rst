@@ -5,8 +5,8 @@ putCommand
 .. module:: jupy4syn.commands.putCommand
    :synopsis: Python class for Jupy4Syn put Command
 
-The putCommand is the analogue of pyepics caget, but using the ipywidgets
-interface to show the PV value in a Jupyter Notebook.
+The putCommand is the analogue of pyepics caput, but using the ipywidgets
+interface to set the PV value in a Jupyter Notebook.
 
 The putCommand class extends its interface methods to execute, parse initial
 arguments and display.
