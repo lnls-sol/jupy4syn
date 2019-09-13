@@ -10,13 +10,25 @@ class putCommand(ICommand):
         self.pv.put(parameters, wait=False)
 
     def args(self, initial_args):
-        # Parameter checking
-        if not initial_args:
-            raise ValueError("PV name or mnemonic can not be empty.")
-        elif not isinstance(initial_args, str):
-            raise ValueError("PV name or mnemonic must be a string.")
+        if not isinstance(initial_args, str):
+            if not initial_args:
+                raise ValueError("Argument list can not be empty.")
+            elif not isinstance(initial_args, list) and len(initial_args) > 2:
+                raise ValueError("Argument must be a list with at most two elements. The PV and the optional value to set.")
+            # Parameter checking
+            if not initial_args[0]:
+                raise ValueError("PV name or mnemonic can not be empty.")
+            elif not isinstance(initial_args[0], str):
+                raise ValueError("PV name or mnemonic must be a string.")
 
-        self.name = initial_args
+            self.name = initial_args[0]
+        else:
+            if not initial_args:
+                raise ValueError("PV name or mnemonic can not be empty.")
+
+            self.name = initial_args
+            initial_args = [initial_args]
+        
         self.pv = PV(self.name)
 
         if not self.pv.wait_for_connection():
@@ -41,11 +53,13 @@ class putCommand(ICommand):
         self.pv_desc = caget(self.pv.pvname + ".DESC")
         self.pv_name = self.pv.pvname
 
-        # If PV is an enum, when its value is get, we get it with "as_string" set to True, so we get
-        # the enum string value, not the enum int value
-        self.pv_is_enum = True if self.pv.type == "enum" or self.pv.type == "time_enum" else False
-
-        return str(self.pv.get(as_string=self.pv_is_enum))
+        if len(initial_args) == 2:
+            return str(initial_args[1])
+        elif len(initial_args) == 1:
+            # If PV is an enum, when its value is get, we get it with "as_string" set to True, so we get
+            # the enum string value, not the enum int value
+            self.pv_is_enum = True if self.pv.type == "enum" or self.pv.type == "time_enum" else False
+            return str(self.pv.get(as_string=self.pv_is_enum))
 
     def show(self, initial_args):
         return True
