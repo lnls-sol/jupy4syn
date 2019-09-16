@@ -2,7 +2,9 @@ from scan_utils import wa
 
 from jupy4syn.commands.ICommand import ICommand
 
-class waCommand(ICommand):
+
+class WaCommand(ICommand):
+
     def __init__(self):
         pass
 
@@ -12,5 +14,5 @@ class waCommand(ICommand):
     def args(self, initial_args):
         return initial_args
 
-    def show(self, initial_args):
-        return False
+    def text_box(self, initial_args):
+        return False, False

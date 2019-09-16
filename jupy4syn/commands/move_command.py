@@ -2,7 +2,9 @@ from scan_utils import move
 
 from jupy4syn.commands.ICommand import ICommand
 
-class moveCommand(ICommand):
+
+class MoveCommand(ICommand):
+
     def __init__(self):
         pass
 
@@ -23,5 +25,8 @@ class moveCommand(ICommand):
 
         return arg_str
 
-    def show(self, initial_args):
-        return True
+    def text_box(self, initial_args):
+        if not initial_args:
+            return True, True
+
+        return False, False

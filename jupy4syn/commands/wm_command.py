@@ -1,8 +1,9 @@
 from scan_utils import wm
-
 from jupy4syn.commands.ICommand import ICommand
 
-class wmCommand(ICommand):
+
+class WmCommand(ICommand):
+
     def __init__(self):
         pass
 
@@ -23,8 +24,8 @@ class wmCommand(ICommand):
 
         return arg_str
 
-    def show(self, initial_args):
+    def text_box(self, initial_args):
         if not initial_args:
-            return True
-        else:
-            return False  
+            return True, True
+
+        return False, False

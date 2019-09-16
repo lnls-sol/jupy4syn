@@ -2,7 +2,9 @@ from scan_utils import ct
 
 from jupy4syn.commands.ICommand import ICommand
 
-class ctCommand(ICommand):
+
+class CtCommand(ICommand):
+
     def __init__(self):
         pass
 
@@ -12,5 +14,8 @@ class ctCommand(ICommand):
     def args(self, initial_args):
         return initial_args
 
-    def show(self, initial_args):
-        return True
+    def text_box(self, initial_args):
+        if not initial_args:
+            return True, True
+
+        return False, False

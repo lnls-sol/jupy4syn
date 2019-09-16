@@ -2,6 +2,7 @@
 .vscode/
 lib/.code-workspace.code-workspace
 .devcontainer/*
+jupy4syn/commands/.code-workspace.code-workspace
 
 # Generated files
 scans/*

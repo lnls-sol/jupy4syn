@@ -52,18 +52,18 @@ class Configuration():
         if jupyterhub:
             with open("/etc/jupyterhub-displays/users_displays.yml", "r") as file:
                 data = yaml.safe_load(file)
-                
+
                 # yaml.safe_load returns a NoneType object if the file is empty
                 if data is None:
                     data = {}
             try:
                 self.display_number = str(data[user])
-            except KeyError as e:
-                raise("User '" + user + "' not defined in display users. Please, contact support.\n" + str(e))
+            except KeyError as error:
+                raise "User '" + user + "' not defined in display users.\
+                      Please, contact support.\n" + str(error)
 
         else:
             self.display_number = ':0.0'
-
 
     def display(self):
         """
