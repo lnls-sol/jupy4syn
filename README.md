@@ -1,6 +1,6 @@
 # Jupy4Syn
 
-|docs|
+[![Documentation Status](https://readthedocs.org/projects/jupy4syn/badge/?version=latest)](https://jupy4syn.readthedocs.io/en/latest/?badge=latest)
 
 This repository contains the Jupy4Syn library, which provides custom Jupyter Notebook widgets to enhance user experience in the Jupyter Notebook using EPICS and Py4Syn for Synchrotron Accelerator.
 
