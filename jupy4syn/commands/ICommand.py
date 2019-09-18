@@ -39,19 +39,19 @@ class ICommand(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def show(self, initial_args):
+    def text_box(self, initial_args):
         """
-        Abstract method check if the command will need a text box.
+        Abstract method check if the command will need a text box and if its text can be modified.
 
         Parameters
         ----------
         initial_args : :obj:`str` or :obj:`list`
-            The initial arguments that will be used to check if a text box will be needed
+            The initial arguments that will be used to check if a text box will be needed.
 
         Returns
         -------
-        out : :obj:`bool`
-            Returns True if a text box will be needed, False otherwise.
+        out : :obj:`tuple` of :obj:`bool`
+            Returns (True, True) if a text box will be needed and if its text can be modified.
         """
 
         raise NotImplementedError
