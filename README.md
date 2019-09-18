@@ -1,4 +1,7 @@
 # Jupy4Syn
+
+|docs|
+
 This repository contains the Jupy4Syn library, which provides custom Jupyter Notebook widgets to enhance user experience in the Jupyter Notebook using EPICS and Py4Syn for Synchrotron Accelerator.
 
 ## Requirements

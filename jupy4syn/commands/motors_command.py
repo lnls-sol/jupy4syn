@@ -1,6 +1,7 @@
 import os
 import subprocess
 
+from epics import PV
 from jupy4syn.Configuration import Configuration
 from jupy4syn.commands.ICommand import ICommand
 
@@ -11,8 +12,19 @@ class MotorsCommand(ICommand):
 
     def exec(self, parameters):
         if self.check_parameters(parameters):
-            pvs_parameters = [self.config.yml_motors[motor]['pv'] for motor
-                              in [item for item in parameters.split() if item != '--user']]
+            pvs_parameters = []
+            for motor in [item for item in parameters.split() if item != '--user']:
+                try:
+                    pvs_parameters.append(self.config.yml_motors[motor]['pv'])
+                except KeyError:
+                    pv = PV(motor)
+                    if not pv.wait_for_connection():
+                        raise ValueError("Invalid parameter")
+
+                    pvs_parameters.append(motor)
+
+            # pvs_parameters = [self.config.yml_motors[motor]['pv'] for motor
+            #                   in [item for item in parameters.split() if item != '--user']]
             if '--user' in parameters:
                 pvs_parameters.append('--user')
 
