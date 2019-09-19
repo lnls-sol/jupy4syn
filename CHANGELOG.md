@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2019-09-19
+### Added
+- Documentation for all Commands
+- Text box verification for edition/visualization
+
+### Fixed
+- Motors and Slits string parsing
+
+### Changed
+- commandButton class is now CommandButton (following PEP8)
+
+### Removed
+- Button classes
+
 ## [0.1.4] - 2019-08-13
 ### Added
 - exec_ssh script for Windows
