@@ -14,3 +14,4 @@ Commands List
 - scan_gui (:py:mod:`ScanGuiCommand <jupy4syn.commands.ScanGuiCommand>`)
 - energy_scan_gui (:py:mod:`EnergyScanGuiCommand <jupy4syn.commands.EnergyScanGuiCommand>`)
 - pymca (:py:mod:`PymcaCommand <jupy4syn.commands.PymcaCommand>`)
+- "" (:py:mod:`UserCommand <jupy4syn.commands.UserCommand>`)

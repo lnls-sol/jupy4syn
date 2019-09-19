@@ -46,16 +46,16 @@ import jupy4syn
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx',
               'sphinx.ext.autosummary', 'sphinx.ext.ifconfig',
-              'sphinx.ext.viewcode', 'numpydoc', 'sphinx.ext.extlinks']
+              'sphinx.ext.viewcode', 'numpydoc', 'sphinx.ext.extlinks', 'm2r']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
 
 # The encoding of source files.
-#source_encoding = 'utf-8-sig'
+# source_encoding = 'utf-8-sig'
 
 # The master toctree document.
 master_doc = 'index'

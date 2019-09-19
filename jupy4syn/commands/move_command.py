@@ -26,7 +26,7 @@ class MoveCommand(ICommand):
         return arg_str
 
     def text_box(self, initial_args):
-        if not initial_args:
+        if not initial_args or isinstance(initial_args, (list, tuple)):
             return True, True
 
         return False, False
