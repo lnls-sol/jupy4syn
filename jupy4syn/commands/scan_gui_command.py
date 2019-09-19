@@ -17,4 +17,4 @@ class ScanGuiCommand(ICommand):
         return initial_args
 
     def text_box(self, initial_args):
-        return False
+        return False, False
