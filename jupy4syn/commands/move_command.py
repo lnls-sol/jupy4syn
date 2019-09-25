@@ -21,7 +21,7 @@ class MoveCommand(ICommand):
                 for i in range(1, len(initial_args) + 1):
                     arg_str += initial_args[i - 1] + (" <value%d> " % i)
             else:
-                arg_str += initial_args + " <value>"
+                arg_str += initial_args
 
         return arg_str
 
@@ -29,4 +29,4 @@ class MoveCommand(ICommand):
         if not initial_args or isinstance(initial_args, (list, tuple)):
             return True, True
 
-        return False, False
+        return True, True
