@@ -94,6 +94,9 @@ class CommandButton(widgets.Button):
                 # If any error occurs, log that but dont stop code exection
                 logprint("Error in executing command " + b.command, "[ERROR]", config=b.config)
                 logprint(str(error), "[ERROR]", config=b.config)
+            except SystemExit as value:
+                logprint("Finished executing command " + b.command +
+                         " with SystemExit(" + str(value) + ")", config=b.config)
 
             # We should sleep for some time to give some responsiveness to the user
             time.sleep(1.0)

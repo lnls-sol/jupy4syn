@@ -1,4 +1,4 @@
-from epics import PV, caget
+from epics import PV
 from jupy4syn.commands.ICommand import ICommand
 
 

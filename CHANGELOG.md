@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2019-09-25
+### Added
+- CommandButton can operate with every command (it calls UserCommand if the command specified is not defined in the CommandDict)
+
+### Fixed
+- ScanGuiCommand parses its arguments correctly
+- CommandButton handling for SystemExit
+
 ## [0.2.0] - 2019-09-19
 ### Added
 - Documentation for all Commands
