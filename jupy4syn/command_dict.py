@@ -60,10 +60,19 @@ class CommandDict():
         }
 
     def execute(self, command, parameters):
+        if command not in self.commands_dict.keys():
+            return self.commands_dict[""].exec(command + ' ' + parameters)
+
         return self.commands_dict[command].exec(parameters)
 
     def textbox_args(self, command, initial_args):
+        if command not in self.commands_dict.keys():
+            return self.commands_dict[""].args(initial_args)
+
         return self.commands_dict[command].args(initial_args)
 
     def text_box(self, command, initial_args):
+        if command not in self.commands_dict.keys():
+            return self.commands_dict[""].text_box(initial_args)
+
         return self.commands_dict[command].text_box(initial_args)

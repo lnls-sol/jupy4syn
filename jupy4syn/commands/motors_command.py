@@ -23,8 +23,6 @@ class MotorsCommand(ICommand):
 
                     pvs_parameters.append(motor)
 
-            # pvs_parameters = [self.config.yml_motors[motor]['pv'] for motor
-            #                   in [item for item in parameters.split() if item != '--user']]
             if '--user' in parameters:
                 pvs_parameters.append('--user')
 

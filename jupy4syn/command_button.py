@@ -12,16 +12,17 @@ from jupy4syn.utils import logprint
 
 class CommandButton(widgets.Button):
 
-    def __init__(self, command, default_args="", config=Configuration()):
+    def __init__(self, command="", default_args="", config=Configuration()):
         """
         **Constructor**
 
         Parameters
         ----------
-        command : :obj:`string`
-            Command that will be executed at the button click
+        command : :obj:`string`, optional
+            Command that will be executed at the button click, by default an empty string
         default_args : :obj:`string`, optional
-            If provided, command will be executed with these parameters and the textbox will not be displayed
+            If provided, command will be executed with these parameters and the textbox will not be displayed,
+            by default an empty string
         config : :py:class:`Configuration <jupy4syn.Configuration.Configuration>`, optional
             Configuration object that contains Jupyter Notebook runtime information, by default Configuration()
 
@@ -93,6 +94,9 @@ class CommandButton(widgets.Button):
                 # If any error occurs, log that but dont stop code exection
                 logprint("Error in executing command " + b.command, "[ERROR]", config=b.config)
                 logprint(str(error), "[ERROR]", config=b.config)
+            except SystemExit as value:
+                logprint("Finished executing command " + b.command +
+                         " with SystemExit(" + str(value) + ")", config=b.config)
 
             # We should sleep for some time to give some responsiveness to the user
             time.sleep(1.0)

@@ -1,4 +1,4 @@
-from epics import PV, caget
+from epics import PV
 from jupy4syn.commands.ICommand import ICommand
 
 
@@ -11,6 +11,9 @@ class GetCommand(ICommand):
         self.pv = ""
         self.pv_name = ""
         self.pv_is_enum = False
+
+        self.is_root = True
+        self.pv_root = None
 
     def exec(self, parameters):
         print(self.pv_name, "\t\t", self.pv.get(as_string=self.pv_is_enum))
@@ -27,6 +30,10 @@ class GetCommand(ICommand):
 
         self.name = initial_args
         self.pv = PV(self.name)
+
+        if len(self.name.split('.')) > 1:
+            self.is_root = False
+            self.pv_root = PV(''.join(self.name.split('.')[:-1]))
 
         if not self.pv.wait_for_connection():
             if self.name in self.config.yml_motors:
@@ -47,7 +54,11 @@ class GetCommand(ICommand):
             if not self.pv.wait_for_connection():
                 raise Exception("Valid name, but PV connection not possible")
 
-        self.pv_desc = caget(self.pv.pvname + ".DESC")
+        if self.is_root:
+            self.pv_desc = PV(self.pv.pvname + ".DESC")
+        else:
+            self.pv_desc = PV(self.pv_root.pvname + ".DESC")
+
         self.pv_name = self.pv.pvname
 
         # If PV is an enum, when its value is get, we get it with "as_string" set to True, so we get
