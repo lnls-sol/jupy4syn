@@ -15,11 +15,12 @@ from jupy4syn.commands.get_command import GetCommand
 from jupy4syn.commands.slits_command import SlitsCommand
 from jupy4syn.commands.motors_command import MotorsCommand
 from jupy4syn.commands.user_command import UserCommand
+from jupy4syn.commands.plot_command import PlotCommand
 
 
 class CommandDict():
 
-    def __init__(self, config=Configuration()):
+    def __init__(self, config=Configuration(), show_header=False):
         """
         **Constructor**
 
@@ -44,6 +45,7 @@ class CommandDict():
         # Dictionaries
         self.commands_dict = {
             "": UserCommand(config),
+            "plot": PlotCommand(show_header),
             "ct": CtCommand(),
             "wa": WaCommand(),
             "wm": WmCommand(),
