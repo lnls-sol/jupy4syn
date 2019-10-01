@@ -1,16 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import IPython
-from jupy4syn.commands.ICommand import ICommand
 
 
-class PlotCommand(ICommand):
+class SpecPlot():
 
-    def __init__(self, show_header):
+    def __init__(self, parameters, show_header=False):
         self.show_header = show_header
-
-    def exec(self, parameters):
-        parsed_parameters = parameters.split(" ")
+        parsed_parameters = self.parse_args(parameters).split(" ")
 
         labels = None
         e_line = d_line = c_line = ''
@@ -32,8 +28,11 @@ class PlotCommand(ICommand):
                 print('#C', c_line)
                 print('#L', str(labels))
 
-        data_frame = pd.read_csv(parsed_parameters[0], sep=' ', comment='#', header=None)
-        data_frame.columns = pd.Index(labels, dtype='object')
+        self.data_frame = pd.read_csv(parsed_parameters[0], sep=' ', comment='#', header=None)
+        self.data_frame.columns = pd.Index(labels, dtype='object')
+
+        self.diff_data_frame = self.data_frame.copy()
+        self.diff_data_frame.iloc[:, 1:] = self.diff_data_frame.iloc[:, 1:].diff().fillna(0)
 
         plt.figure()
 
@@ -43,11 +42,12 @@ class PlotCommand(ICommand):
             plt.xlabel(parsed_parameters[2])
             plt.ylabel(parsed_parameters[2 + i + 1])
 
-            plt.plot(parsed_parameters[2], parsed_parameters[2 + i + 1], data=data_frame)
+            plt.plot(parsed_parameters[2], parsed_parameters[2 + i + 1], data=self.data_frame)
+            plt.plot(parsed_parameters[2], parsed_parameters[2 + i + 1], data=self.diff_data_frame)
 
         plt.show()
 
-    def args(self, initial_args):
+    def parse_args(self, initial_args):
         arg_str = ""
         parameters = initial_args
 
@@ -76,9 +76,3 @@ class PlotCommand(ICommand):
                 raise ValueError("Invalid parameter")
 
         return arg_str
-
-    def text_box(self, initial_args):
-        if not initial_args:
-            return True, True
-
-        return False, False
