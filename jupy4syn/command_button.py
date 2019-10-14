@@ -12,7 +12,7 @@ from jupy4syn.utils import logprint
 
 class CommandButton(widgets.Button):
 
-    def __init__(self, command="", default_args="", config=Configuration()):
+    def __init__(self, command="", default_args="", config=Configuration(), **kwargs):
         """
         **Constructor**
 
@@ -41,7 +41,7 @@ class CommandButton(widgets.Button):
 
         # Command Dictionary
         self.command = command
-        self.command_dict = CommandDict(config=self.config)
+        self.command_dict = CommandDict(config=self.config, **kwargs)
 
         self.parsed_args = self.command_dict.textbox_args(command, default_args)
         self.show_text_box, self.enable_text_box = self.command_dict.text_box(command, default_args)
