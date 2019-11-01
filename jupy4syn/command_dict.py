@@ -19,7 +19,7 @@ from jupy4syn.commands.user_command import UserCommand
 
 class CommandDict():
 
-    def __init__(self, config=Configuration()):
+    def __init__(self, config=Configuration(), show_header=False):
         """
         **Constructor**
 

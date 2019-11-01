@@ -109,7 +109,7 @@ def main():
             else:
                 print("Invalid key '" + key + "'.")
         except KeyboardInterrupt:
-            pass
+            break
         except Exception as e:
             print(e)
         
