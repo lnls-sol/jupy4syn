@@ -59,8 +59,11 @@ class Configuration():
             try:
                 self.display_number = str(data[user])
             except KeyError as error:
-                raise "User '" + user + "' not defined in display users.\
-                      Please, contact support.\n" + str(error)
+                print("User '" + user + "' not defined in display users.\
+                      No interface will be opened.\
+                      Please, contact support.\n" + str(error))
+
+            self.display_number = ''
 
         else:
             self.display_number = ':0.0'
