@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.3] - 2019-11-26
+### Fixed
+- Configuration display-number default value
+
 ## [0.2.2] - 2019-11-01
 ### Added
 - SpecPlot command. It plots a SPEC file with matplotlib.
