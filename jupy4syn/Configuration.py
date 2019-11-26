@@ -63,7 +63,7 @@ class Configuration():
                       No interface will be opened.\
                       Please, contact support.\n" + str(error))
 
-            self.display_number = ''
+                self.display_number = ''
 
         else:
             self.display_number = ':0.0'
