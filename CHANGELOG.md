@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2019-11-01
+### Added
+- SpecPlot command. It plots a SPEC file with matplotlib.
+
+### Fixed
+- move Command parsing
+- connect_display KeyboardInterruption
+- Configuration user display check
+
 ## [0.2.1] - 2019-09-25
 ### Added
 - CommandButton can operate with every command (it calls UserCommand if the command specified is not defined in the CommandDict)
