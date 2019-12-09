@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.4] - 2019-12-09
+### Fixed
+- user_command arguments parsing when there was no argument
+
 ## [0.2.3] - 2019-11-26
 ### Fixed
 - Configuration display-number default value
