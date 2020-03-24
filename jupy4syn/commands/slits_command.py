@@ -14,7 +14,7 @@ class SlitsCommand(ICommand):
         if self.check_parameters(parameters):
             pvs_parameters = []
             for param in [item for item in parameters.split()]:
-                if param[0:1] != '--':
+                if param[0] != '-':
                     try:
                         pvs_parameters.append(self.config.yml_motors[param]['pv'])
                     except KeyError:
