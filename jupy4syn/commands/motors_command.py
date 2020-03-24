@@ -19,7 +19,8 @@ class MotorsCommand(ICommand):
                 except KeyError:
                     pv = PV(motor)
                     if not pv.wait_for_connection():
-                        raise ValueError("Invalid parameter")
+                        # raise ValueError("Invalid parameter")
+                        print("Invalid parameter:", motor)
 
                     pvs_parameters.append(motor)
 
@@ -30,7 +31,8 @@ class MotorsCommand(ICommand):
             subprocess.Popen(["motors_gui"] + pvs_parameters,
                              env=dict(os.environ, DISPLAY=self.config.display_number))
         else:
-            raise ValueError("Invalid parameter")
+            print("check_parameters false")
+            raise ValueError("Invalid parameters: " + str(parameters))
 
     def args(self, initial_args):
         if not initial_args:
