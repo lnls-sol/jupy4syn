@@ -13,20 +13,21 @@ class SlitsCommand(ICommand):
     def exec(self, parameters):
         if self.check_parameters(parameters):
             pvs_parameters = []
-            for motor in [item for item in parameters.split() if item != '--user']:
-                try:
-                    pvs_parameters.append(self.config.yml_motors[motor]['pv'])
-                except KeyError:
-                    pv = PV(motor)
-                    if not pv.wait_for_connection():
-                        raise ValueError("Invalid parameter")
+            for param in [item for item in parameters.split()]:
+                if param[0:1] != '--':
+                    try:
+                        pvs_parameters.append(self.config.yml_motors[param]['pv'])
+                    except KeyError:
+                        pv = PV(param)
+                        if not pv.wait_for_connection():
+                            print("Invalid parameter:", param)
 
-                    pvs_parameters.append(motor)
+                        pvs_parameters.append(param)
+                else:
+                    pvs_parameters.append(param)
 
             # pvs_parameters = [self.config.yml_motors[motor]['pv'] for motor
             #                   in [item for item in parameters.split() if item != '--user']]
-            if '--user' in parameters:
-                pvs_parameters.append('--user')
 
             subprocess.Popen(["slits"] + pvs_parameters,
                              env=dict(os.environ, DISPLAY=self.config.display_number))
